@@ -1,0 +1,117 @@
+{
+  "planetLore": [
+    {
+      "repoId": "THE-HYPERCODE",
+      "planetName": "Syntax Prime",
+      "biome": "neon-megacity",
+      "civilization": "The Pattern Weavers",
+      "mission": "Make coding visible and understandable for neurodivergent minds",
+      "story": "On Syntax Prime, code is not written—it is woven into glowing structures that float through the air. The Pattern Weavers are a guild of builders who believe that understanding should never require decoding walls of text. Every function is a building, every loop is a pathway, and the city itself rearranges based on what needs attention. Visitors with ADHD find this world peaceful: everything that matters is visible, and nothing hides in abstraction.",
+      "motto": "If you can see it, you can build it.",
+      "color": "#61DAFB",
+      "manualConnections": ["HyperFocus-Zone-Portal", "hyperfocus-constellation"],
+      "demoUrl": null,
+      "docsUrl": null
+    },
+    {
+      "repoId": "HyperFocus-Zone-Portal",
+      "planetName": "The Welcome World",
+      "biome": "orbital-hub",
+      "civilization": "The Guides",
+      "mission": "Be the entry point to the Hyperfocus ecosystem",
+      "story": "The Welcome World is a lush orbital station that hovers at the center of the welshDog universe. It is run by The Guides, a collective of friendly AI agents who help explorers understand the ecosystem. Every visitor arrives here first. The Guides provide maps, explain each planet's purpose, and help travelers choose where to go next based on what they're building. The station glows warmly, and soft music plays in the background. It is never overwhelming.",
+      "motto": "Start here. We'll help you find your way.",
+      "color": "#10B981",
+      "manualConnections": ["THE-HYPERCODE", "HyperFocus-The-Anime", "Hyperfocus-Universe-The-Living-GitHub."],
+      "demoUrl": null,
+      "docsUrl": null
+    },
+    {
+      "repoId": "hyperfocus-constellation",
+      "planetName": "The Archive of Origins",
+      "biome": "crystalline-library",
+      "civilization": "The Archivists",
+      "mission": "Preserve the original vision of interactive research visualization",
+      "story": "This was the first world. The Archive of Origins is a quiet, beautiful planet made of crystalline structures that shimmer with old data. The Archivists maintain it lovingly, not as a relic, but as a reminder of where the journey began. Visitors come here to see how the original constellation idea worked—connecting research nodes in 3D space. It inspired everything that came after. The planet is calm, meditative, and slightly nostalgic. New builders often visit to understand the roots of the vision.",
+      "motto": "Every universe starts with a single star.",
+      "color": "#8B5CF6",
+      "manualConnections": ["THE-HYPERCODE", "Hyperfocus-Universe-The-Living-GitHub."],
+      "demoUrl": null,
+      "docsUrl": null
+    },
+    {
+      "repoId": "HyperFocus-The-Anime",
+      "planetName": "Studio Planet",
+      "biome": "creative-workshop",
+      "civilization": "The Dream Animators",
+      "mission": "Build an AI-powered anime production pipeline for neurodivergent creators",
+      "story": "Studio Planet is a vibrant world of color, motion, and sound. The Dream Animators are a collective of artists and AI systems working together to create anime episodes, characters, and worlds. The planet's surface is covered in animation studios, each one generating scenes, backgrounds, and character designs using AI tools. The civilization believes that storytelling should be accessible to anyone with a vision, even if they can't draw. Visitors see characters walking between studios, episodes being edited in real-time, and new worlds being born every day.",
+      "motto": "Your story deserves to be animated.",
+      "color": "#FF6B9D",
+      "manualConnections": ["HyperFocus-Zone-Portal"],
+      "demoUrl": null,
+      "docsUrl": null
+    },
+    {
+      "repoId": "3D-Print-Genie",
+      "planetName": "Forgeworld",
+      "biome": "industrial-foundry",
+      "civilization": "The Makers",
+      "mission": "Optimize 3D printing with AI-powered tools and repair guides",
+      "story": "Forgeworld is a planet of constant creation. The Makers are a civilization of engineers and tinkerers who build physical objects layer by layer. Tiny robotic workers move across the surface, assembling structures from the ground up. When a print fails, repair drones analyze the issue and suggest fixes. The planet glows with the heat of active forges, and the sound of machines humming fills the air. The Makers believe that if you can imagine it, you can print it—and if it breaks, you can fix it.",
+      "motto": "Build it. Break it. Build it better.",
+      "color": "#F59E0B",
+      "manualConnections": [],
+      "demoUrl": null,
+      "docsUrl": null
+    },
+    {
+      "repoId": "Hyperfocus-Universe-The-Living-GitHub.",
+      "planetName": "The Meta-Observatory",
+      "biome": "living-mirror",
+      "civilization": "The Watchers",
+      "mission": "Map and visualize the entire welshDog universe as a living system",
+      "story": "The Meta-Observatory is a strange and recursive world. It is the only planet that can see all the others at once. The Watchers live here, studying the connections between repos, tracking activity across the universe, and maintaining the living map. The planet's surface is made of mirrors and screens, each one showing a different world in real-time. When you commit to a repo, the Watchers see a light flicker on their displays. They celebrate every build, every fix, every new idea. This planet is self-aware: it knows it is part of the universe it maps.",
+      "motto": "We are the universe observing itself.",
+      "color": "#3B82F6",
+      "manualConnections": ["THE-HYPERCODE", "HyperFocus-Zone-Portal", "hyperfocus-constellation"],
+      "demoUrl": null,
+      "docsUrl": null
+    }
+  ],
+  "biomeDefinitions": {
+    "neon-megacity": {
+      "description": "Glowing towers, floating code structures, electric-blue lighting",
+      "primaryColor": "#61DAFB",
+      "terrainType": "urban"
+    },
+    "orbital-hub": {
+      "description": "Lush green station with soft lighting and welcoming architecture",
+      "primaryColor": "#10B981",
+      "terrainType": "station"
+    },
+    "crystalline-library": {
+      "description": "Shimmering crystal structures, quiet and meditative",
+      "primaryColor": "#8B5CF6",
+      "terrainType": "archive"
+    },
+    "creative-workshop": {
+      "description": "Colorful studios, animation in progress, vibrant and energetic",
+      "primaryColor": "#FF6B9D",
+      "terrainType": "creative"
+    },
+    "industrial-foundry": {
+      "description": "Forges, robotic workers, constant construction and heat",
+      "primaryColor": "#F59E0B",
+      "terrainType": "industrial"
+    },
+    "living-mirror": {
+      "description": "Reflective surfaces showing all other planets, recursive and observant",
+      "primaryColor": "#3B82F6",
+      "terrainType": "meta"
+    }
+  },
+  "lastEdited": "2026-07-12T00:00:00Z",
+  "editedBy": "welshDog",
+  "note": "This file is hand-written lore. Edit it to add personality to your planets. The frontend merges this with planets.json to create the full universe."
+}
