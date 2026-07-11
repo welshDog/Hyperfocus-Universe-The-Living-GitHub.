@@ -1,0 +1,46 @@
+{
+  "name": "hyperfocus-universe",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A living GitHub visualization where every repo is a planet with its own civilization",
+  "author": "welshDog <https://github.com/welshDog>",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/welshDog/Hyperfocus-Universe-The-Living-GitHub."
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "fetch-planets": "node scripts/fetch-planets.js",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@react-three/fiber": "^8.17.0",
+    "@react-three/drei": "^9.109.0",
+    "three": "^0.167.0",
+    "framer-motion": "^11.3.0",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@types/three": "^0.167.0",
+    "typescript": "^5.5.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
