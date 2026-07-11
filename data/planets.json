@@ -1,0 +1,70 @@
+{
+  "planets": [
+    {
+      "id": "THE-HYPERCODE",
+      "name": "THE-HYPERCODE",
+      "owner": "welshDog",
+      "description": "Visual coding environment for neurodivergent minds",
+      "url": "https://github.com/welshDog/THE-HYPERCODE",
+      "language": "TypeScript",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "openIssues": 0,
+      "archived": false,
+      "private": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-15T00:00:00Z",
+      "pushedAt": "2024-01-15T00:00:00Z",
+      "topics": ["adhd", "neurodivergent", "visual-coding", "accessibility"],
+      "hasReleases": false,
+      "defaultBranch": "main"
+    },
+    {
+      "id": "HyperFocus-Zone-Portal",
+      "name": "HyperFocus-Zone-Portal",
+      "owner": "welshDog",
+      "description": "Main hub for the Hyperfocus Zone ecosystem",
+      "url": "https://github.com/welshDog/HyperFocus-Zone-Portal",
+      "language": "TypeScript",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "openIssues": 0,
+      "archived": false,
+      "private": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-10T00:00:00Z",
+      "pushedAt": "2024-01-10T00:00:00Z",
+      "topics": ["neurodivergent", "adhd", "portal", "hub"],
+      "hasReleases": false,
+      "defaultBranch": "main"
+    },
+    {
+      "id": "hyperfocus-constellation",
+      "name": "hyperfocus-constellation",
+      "owner": "welshDog",
+      "description": "Original 3D constellation visualizer",
+      "url": "https://github.com/welshDog/hyperfocus-constellation",
+      "language": "JavaScript",
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "openIssues": 0,
+      "archived": false,
+      "private": false,
+      "createdAt": "2023-12-01T00:00:00Z",
+      "updatedAt": "2024-01-05T00:00:00Z",
+      "pushedAt": "2024-01-05T00:00:00Z",
+      "topics": ["3d", "visualization", "research"],
+      "hasReleases": false,
+      "defaultBranch": "main"
+    }
+  ],
+  "lastUpdated": "2026-07-12T00:00:00Z",
+  "metadata": {
+    "totalRepos": 3,
+    "generatedBy": "fetch-planets.js",
+    "note": "This file is auto-generated from GitHub API. Do not edit manually - use scripts/fetch-planets.js to update."
+  }
+}
