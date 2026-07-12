@@ -126,16 +126,35 @@ The old constellation *claimed* WCAG AA and shipped zero keyboard shortcuts and 
 - [x] Sheet has an accessible title (`aria-labelledby`) and a labelled Close button
 - [x] Filter state announced via `aria-live="polite"` ("Showing 17 worlds · 13 quests")
 - [x] `prefers-reduced-motion: reduce` kills all transitions and the starfield
-- [ ] **Not yet done:** a real screen-reader pass (NVDA/VoiceOver) and axe audit. The
-      markup is right; nobody has *driven* it yet. Don't tick this until someone has.
+- [x] **axe-core 4.12.1 (headless Chrome) against the live URL: 0 violations.**
+      Caveat, stated honestly: axe detects only 20–50% of accessibility issues, and
+      this scan covered the **default state only** — sheet closed, RESTING collapsed.
+- [ ] **Still not done:** axe with the planet sheet OPEN (the focus trap is the risky
+      part), and a real screen-reader pass (NVDA/VoiceOver). Nobody has *driven* this
+      with assistive tech. Until they have, we claim no WCAG conformance.
+
+### 🚀 Deployed
+
+- [x] **LIVE: https://hyperfocus-universe-the-living-hub.vercel.app** (production)
+- [x] Live truth test passed: 17 cards (10 NOW / 7 NEXT), RESTING collapsed behind
+      "Show 67", 12 empty states, and **live quest text matches `data/planets.json`
+      byte-for-byte** (modulo HTML entity escaping)
+- [ ] **Vercel ↔ GitHub auto-deploy is NOT connected.** `vercel git connect` failed:
+      the Vercel GitHub App on the `bro-skis` team lacks access to this repo. Until
+      Lyndz grants it in the dashboard, **pushes to `main` will NOT redeploy** — the
+      site must be shipped with `npx vercel --prod --scope bro-skis`.
 
 ---
 
 ## 📋 Next Up
 
-- [ ] Screen-reader + axe pass on the built page (see above — the last honest gap)
+- [ ] Grant the Vercel GitHub App access to this repo, then `vercel git connect` (see above)
+- [ ] Manual keyboard pass on the live URL: Tab / Shift+Tab / Enter / Space / Escape,
+      and confirm focus returns to the exact planet that opened the sheet
+- [ ] Windows "Reduce motion" on → refresh → confirm starfield and transitions stop
+- [ ] Phone-width pass of the whole flow
+- [ ] Screen-reader pass (see above — the last honest gap)
 - [ ] Push `WHATS-DONE.md` into the repos that matter, to light up the 76 quiet worlds
-- [ ] Deploy to Vercel
 - [ ] **Level 3 — Three.js as the reward layer**, once the list view is worth opening daily.
       Positions must be COMPUTED from `activityScore` + focus state. The old prototype
       hardcoded x/y per repo and that is exactly why it froze at 24 stars forever.

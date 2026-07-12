@@ -76,8 +76,13 @@ Your universe stays current:
 The first interface is designed for keyboard use, visible focus, dialog focus management,
 and reduced-motion preferences.
 
-Automated accessibility testing and screen-reader testing are planned and tracked.
-We do not currently claim WCAG conformance or a completed accessibility audit.
+An automated axe-core scan of the live page reports **0 violations** in its default state.
+That is a useful signal, not a certificate: axe detects only 20–50% of accessibility
+issues, and the scan did not cover the open planet sheet.
+
+Screen-reader testing has **not** been done. We do not claim WCAG conformance or a
+completed accessibility audit, and we will not until someone has run the tests and
+recorded the results.
 
 ---
 
