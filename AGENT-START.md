@@ -182,6 +182,29 @@ Mark items complete as you build them. This helps Lyndon see progress at a glanc
 
 ---
 
+## 🌌 Hyper 3D Direction
+
+The Universe view is a React Three Fiber layer over the **same** data pipeline.
+
+Rules that must not be broken:
+
+- 3D is a **visual enhancement layer** over the accessible 2D Hub. List view is the
+  default and must always remain sufficient on its own.
+- **All visuals derive from real repo / activity / quest / lore data.** Never build a
+  decorative planet with no data meaning.
+- **Measure a signal's real distribution before mapping a visual to it.** The first
+  draft of the spec sized planets by stars — but this universe's max star count is 3,
+  so it would have rendered 84 identical spheres. Codebase size (`sizeKb`) ranges
+  1 → 481,833 and is the real size signal. See `docs/PLANET-VISUAL-MAPPING.md`.
+- **Never recompute biome or colour in the 3D layer.** They are already resolved in
+  `mergeData.ts`. A second derivation means a world can look like two different things.
+- **Positions are computed** (deterministic hash of the repo slug + focus shell), never
+  hand-placed. Hardcoded x/y is why the old `hyperfocus-constellation` froze at 24 stars.
+- Preserve keyboard access: the canvas is `aria-hidden` and a real DOM button exists for
+  every planet. Preserve `prefers-reduced-motion`, which stops **all** orbit and spin.
+
+---
+
 ## 💡 Development Principles
 
 ### Accessibility First

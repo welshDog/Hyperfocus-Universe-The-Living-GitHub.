@@ -32,6 +32,12 @@ export interface RawPlanet {
   forks: number;
   watchers: number;
   openIssues: number;
+  /** Codebase size in KB. The 3D radius signal — see planetVisual.ts. */
+  sizeKb: number;
+  /** Issues closed in the last 30 days. This is what lets storms heal. */
+  closedIssuesRecent: number;
+  releaseCount: number;
+  latestReleaseAt: string | null;
   archived: boolean;
   isFork: boolean;
   createdAt: string;

@@ -1,0 +1,241 @@
+Below is a concrete mapping system + UI layout you can actually build.
+
+1️⃣ Core idea for Hyper 3D
+Goal:
+One shared 3D universe view (React Three Fiber + Three.js) where each repo is a planet, and the planet’s appearance + motion are calculated from live data and quests. React Three Fiber lets you build Three.js scenes as React components, perfect for wiring them straight to your existing React state.
+
+2D Hub = calm command centre (you already shipped this).
+
+Hyper 3D = visual skin over the same data, not a separate logic system.
+
+Everything animates from the data, not random.
+
+2️⃣ Repo → Planet mapping (exact spec)
+Use this as your TypeScript interface + shader/mesh mapping.
+
+Planet data model
+ts
+type PlanetVisual = {
+  baseColor: string;
+  accentColor: string;
+  biome: string;
+  radius: number;
+  atmosphereIntensity: number;
+  cloudCoverage: number;
+  ringPresence: boolean;
+  ringDensity: number;
+  moonCount: number;
+  surfaceRoughness: number;
+  surfaceMetalness: number;
+  lavaActivity: number;
+  orbitRadius: number;
+  orbitSpeed: number;
+  axialTilt: number;
+  spinSpeed: number;
+  glowIntensity: number;
+  questBeacons: number;
+  stormIntensity: number;
+  haloPulse: number;
+};
+Mapping table
+Repo signal	Planet effect	Why it feels good
+Primary language	Base biome + color palette (TS/JS → neon megacity blues; Python/AI → orbital cyan; Docs → library sandstone; 3D/print → industrial orange)	Instantly tells “type of world” without reading text.
+Topics	Accent streaks, surface patterns (e.g. ai, agents, web3 add special highlights)	Makes special-tech worlds visibly distinct.
+Stars	Radius + subtle glow; more stars = slightly larger + brighter	Stars = social gravity → bigger, more luminous world.
+Forks	Moon count; more forks = more moons	Forks as “child worlds” orbiting the main planet.
+Open issues	Storms, cracks, volcanic activity; more issues = more visible turbulence	Work-in-progress worlds look noisy and stormy.
+Closed issues in last 30 days	Healing patches, repaired terrain	You literally see worlds stabilising as you fix stuff.
+pushed_at recency (NOW/NEXT/RESTING)	Orbit radius + brightness (NOW closer and bright; NEXT mid; RESTING far and dim)	Focus worlds literally move closer to camera.
+Releases/tags	Celebration aura, confetti rings or temporary flare	Big shipping moments feel like supernova bursts.
+Quest count (from WHATS-DONE + issues)	Quest beacon lights on the surface; more quests = more beacons	You see where missions are available.
+Repo size / file count	Surface density (more detail/noise in texture)	Big codebases feel like complex terrain.
+Archived	Frozen, low-spin planet with faint light	Past worlds become quiet, museum-like.
+Lore presence	Named civilisation overlay; custom city lights / landmarks	Manual lore gets rewarded with unique visuals.
+3️⃣ Visual states & evolution rules
+Make the planets change over time, but all from data.
+
+Focus state (NOW / NEXT / RESTING)
+NOW
+
+High glowIntensity
+
+Closer orbitRadius
+
+Faster spinSpeed
+
+Slight camera parallax towards them when you enter the scene
+
+NEXT
+
+Medium glow
+
+Mid orbit
+
+Normal spin
+
+RESTING
+
+Low glow
+
+Large orbit radius
+
+Slower spin, darker rim-light to keep them visible but calm
+
+You already compute NOW/NEXT/RESTING from pushed_at and pins in the Hub; feed that directly to the 3D scene.
+
+Activity & health
+Heavy open issues, few closes →
+
+High stormIntensity (moving clouds, lightning flashes)
+
+Higher lavaActivity (glowing fissures)
+
+Recent issue closes →
+
+Storms calm, lava recedes, surface roughness decreases
+
+近期 release →
+
+Temporary increased haloPulse + a ring of fireworks/comets for 24–48h
+
+Social & structure
+Stars → radius + glow (log scale so “big repo” doesn’t explode)
+
+Forks → 1–5 moons (clamped)
+
+Watchers/stargazers growth → slow breathing pulse in atmosphere
+
+Quests
+Each quest (unchecked item) → small light beacon on night side of planet
+
+Hover / focus a planet → quest markers brighten, showing “this world has missions.”
+
+No quests → visible but low-contrast surface; card copy “No quest signal yet” stays the same, just visually reflected.
+
+4️⃣ Hyper-modern 3D UI layout
+Your reference images are dense; your UI should be cleaner, more like modern 3D data viz (think Globe.GL style minimal overlays, not game HUD noise).
+
+Main layout
+Left/center: React Three Fiber <Canvas> with:
+
+Free-orbit camera (mouse drag / scroll zoom)
+
+Soft space background (starfield, but tinted to your brand)
+
+Planets positioned on concentric shells:
+
+inner shell = NOW
+
+mid shell = NEXT
+
+outer shell = RESTING
+
+Right-hand panel: Your existing PlanetSheet UI:
+
+Repo name + lore name
+
+Stats (stars, forks, issues, activity timeline)
+
+Quests as list with “Open repo” / “Start quest”
+
+Accessibility controls (motion/contrast toggle)
+
+React Three Fiber is designed for declarative scenes in React and works well with Tailwind or plain CSS overlay for clean 2D panels.
+
+Interaction model
+Click / Enter on a planet:
+
+Planet scales slightly (data-driven scale)
+
+Camera eases in to follow it (orbit focus)
+
+Right panel opens with PlanetSheet
+
+Hover:
+
+Highlight ring; tooltips are optional because the right panel gives detail
+
+Search/filter:
+
+Search box filters both 2D list and 3D scene (non-matching planets fade out)
+
+Focus filter buttons (NOW/NEXT/RESTING) reshape the scene (only those shells visible)
+
+This mirrors best-practice 3D UIs: 3D for spatial overview, 2D for detail.
+
+5️⃣ Accessibility & motion controls (hyper but kind)
+You already care about this; keep it front and centre.
+
+Respect prefers-reduced-motion:
+
+If reduce, disable orbit motion, storms, camera auto-move, and any “breathing” loops; keep only essential transitions.
+
+Keyboard:
+
+Tab focus cycles through planets in a deterministic order (NOW first)
+
+Enter/Space selects planet, opens sheet; Escape closes sheet and returns focus
+
+Text:
+
+HUD text and panel content use your existing 2D layer; 3D scene never hides readable info behind camera motion.
+
+Hyper UI ≠ spinning everything all the time; it’s calm depth with bursts of motion only when needed.
+
+6️⃣ Visual style: “Hyper” but clean
+Pick a direction that feels modern and ND-friendly, not noisy:
+
+Color:
+
+Dark space background
+
+One accent colour family per biome (so similar worlds feel grouped)
+
+Keep HUD/UI in beige/neutral Nexus palette you already use for the Hub, with teal accent only for primary actions.
+
+Lighting:
+
+Soft key light + rim light around each planet
+
+No harsh bloom or lens flare that would make reading exhausting
+
+Composition:
+
+Center cluster of NOW planets
+
+NEXT ring around them
+
+RESTING worlds scattered further out, slightly blurred/dim
+
+Use Globe.GL and other modern 3D data-viz examples as references: they show how to keep text legible and motion restrained while still feeling futuristic.
+
+7️⃣ How to build it (high-level steps)
+Add a planetVisual builder
+
+Input: your existing repo + lore + quest data
+
+Output: PlanetVisual fields as above
+
+Create <PlanetMesh /> in React Three Fiber
+
+Takes PlanetVisual and renders sphere, rings, moons, storms, beacons
+
+Uses useFrame for spin/orbit animation, but gates it on motion prefs.
+
+Create <UniverseScene />
+
+Maps over all planets, positions them by focus state
+
+Handles camera controls + hover/click interaction
+
+Wire to Hub
+
+Share state with your 2D page: same filters, same search, same PlanetSheet
+
+Add a “Universe View” toggle button at the top of the Hub
+
+If you like this direction, next I can sketch out:
+
+a concrete TypeScript computePlanetVisual(repo) function signature, and
+
+a simple R3F <PlanetMesh> pseudo-code you can paste into your app.

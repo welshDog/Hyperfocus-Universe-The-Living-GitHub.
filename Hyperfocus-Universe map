@@ -1,0 +1,408 @@
+Best move now
+Push these into Hyperfocus-Universe-The-Living-Hub as the next bundle:
+
+docs/HYPER-3D-VISION.md
+
+docs/PLANET-VISUAL-MAPPING.md
+
+src/lib/computePlanetVisual.ts
+
+src/types/planetVisual.ts
+
+src/components/UniverseScene.tsx
+
+src/components/PlanetMesh.tsx
+
+src/components/UniverseViewToggle.tsx
+
+Update WHATS-DONE.md
+
+Update AGENT-START.md
+
+Paste-ready doc
+Create docs/PLANET-VISUAL-MAPPING.md with this:
+
+text
+# 🌌 Planet Visual Mapping System
+
+## Purpose
+
+Turn every GitHub repository into a living planet whose appearance evolves from real repo data.
+
+This is a visual layer on top of the existing truth layer:
+- repositories
+- quests
+- focus state
+- lore
+- activity
+
+The 3D system must never replace the accessible 2D Hub. It enhances it.
+
+---
+
+## Core Rule
+
+All planet visuals are derived from data, not random decoration.
+
+---
+
+## Data Inputs
+
+- `language`
+- `topics`
+- `stars`
+- `forks`
+- `watchers`
+- `openIssues`
+- `closedIssuesRecent`
+- `pushedAt`
+- `questCount`
+- `releaseCount`
+- `archived`
+- `focusState`
+- `lorePresence`
+
+---
+
+## Planet Visual Output
+
+```ts
+export type PlanetVisual = {
+  baseColor: string;
+  accentColor: string;
+  biome: string;
+  radius: number;
+  atmosphereIntensity: number;
+  cloudCoverage: number;
+  ringPresence: boolean;
+  ringDensity: number;
+  moonCount: number;
+  surfaceRoughness: number;
+  surfaceMetalness: number;
+  lavaActivity: number;
+  orbitRadius: number;
+  orbitSpeed: number;
+  axialTilt: number;
+  spinSpeed: number;
+  glowIntensity: number;
+  questBeacons: number;
+  stormIntensity: number;
+  haloPulse: number;
+};
+```
+
+---
+
+## Mapping Rules
+
+### Language → biome and palette
+
+- TypeScript / JavaScript / React / Next.js → `neon-megacity`
+- Python / AI / agents → `orbital-hub`
+- Docs / learning / markdown-heavy repos → `crystalline-library`
+- 3D / CAD / print / maker repos → `industrial-foundry`
+- Art / animation / media → `creative-workshop`
+- Unknown / mixed → `uncharted-world`
+
+### Stars
+
+- Increase `radius`
+- Increase `glowIntensity`
+- Use logarithmic scaling so large repos do not become absurdly huge
+
+### Forks
+
+- Increase `moonCount`
+- Clamp between 0 and 5
+
+### Open issues
+
+- Increase `stormIntensity`
+- Increase `lavaActivity`
+- Add visual instability
+
+### Recently closed issues
+
+- Reduce `stormIntensity`
+- Reduce `lavaActivity`
+- Increase surface calmness
+
+### Focus state
+
+- `NOW` → brighter, closer orbit, faster spin
+- `NEXT` → medium glow, medium orbit
+- `RESTING` → dimmer, slower, farther out
+
+### Quest count
+
+- Increase `questBeacons`
+- More quests = more visible mission lights on surface/night side
+
+### Releases
+
+- Temporary `haloPulse`
+- Optional celebration ring or flare
+
+### Archived
+
+- Freeze motion
+- Lower glow
+- Lower spin
+- Cooler, dormant palette
+
+### Lore present
+
+- Unlock handcrafted overrides
+- Custom landmarks, civilisation name, special colour adjustments
+
+---
+
+## Accessibility Rules
+
+- 3D is optional, not required to use the product
+- Every planet must remain selectable from keyboard
+- `prefers-reduced-motion: reduce` disables orbit motion, storms, auto camera, and pulsing
+- The 2D info panel remains the source of readable detail
+
+---
+
+## Scene Layout
+
+- Inner shell: `NOW`
+- Middle shell: `NEXT`
+- Outer shell: `RESTING`
+
+This keeps the most relevant worlds visually closest.
+
+---
+
+## Product Principle
+
+The Living Hub is not a screensaver.
+
+The purpose of Hyper 3D is:
+1. make active work feel alive
+2. make continuity emotionally rewarding
+3. turn repo activity into visible world evolution
+Paste-ready TypeScript
+Create src/types/planetVisual.ts:
+
+ts
+export type PlanetVisual = {
+  baseColor: string;
+  accentColor: string;
+  biome: string;
+  radius: number;
+  atmosphereIntensity: number;
+  cloudCoverage: number;
+  ringPresence: boolean;
+  ringDensity: number;
+  moonCount: number;
+  surfaceRoughness: number;
+  surfaceMetalness: number;
+  lavaActivity: number;
+  orbitRadius: number;
+  orbitSpeed: number;
+  axialTilt: number;
+  spinSpeed: number;
+  glowIntensity: number;
+  questBeacons: number;
+  stormIntensity: number;
+  haloPulse: number;
+};
+Create src/lib/computePlanetVisual.ts:
+
+ts
+import type { PlanetVisual } from "@/types/planetVisual";
+
+type FocusState = "NOW" | "NEXT" | "RESTING";
+
+type PlanetRepoInput = {
+  language?: string | null;
+  topics?: string[];
+  stars?: number;
+  forks?: number;
+  openIssues?: number;
+  closedIssuesRecent?: number;
+  questCount?: number;
+  archived?: boolean;
+  hasLore?: boolean;
+  focusState?: FocusState;
+  releaseCount?: number;
+};
+
+const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+const logScale = (n: number, base = 10) => Math.log(n + 1) / Math.log(base);
+
+function getBiome(language?: string | null, topics: string[] = []) {
+  const l = (language || "").toLowerCase();
+  const t = topics.map((x) => x.toLowerCase()).join(" ");
+
+  if (["typescript", "javascript"].includes(l) || t.includes("react") || t.includes("next")) {
+    return {
+      biome: "neon-megacity",
+      baseColor: "#5DA9FF",
+      accentColor: "#A66BFF",
+    };
+  }
+
+  if (l === "python" || t.includes("ai") || t.includes("agent")) {
+    return {
+      biome: "orbital-hub",
+      baseColor: "#4FD1C5",
+      accentColor: "#7DD3FC",
+    };
+  }
+
+  if (t.includes("docs") || t.includes("learning") || l === "markdown") {
+    return {
+      biome: "crystalline-library",
+      baseColor: "#D6C6A5",
+      accentColor: "#F8E7B5",
+    };
+  }
+
+  if (t.includes("3d") || t.includes("print") || t.includes("cad") || t.includes("maker")) {
+    return {
+      biome: "industrial-foundry",
+      baseColor: "#C9733D",
+      accentColor: "#F2B35D",
+    };
+  }
+
+  if (t.includes("art") || t.includes("animation") || t.includes("music") || t.includes("media")) {
+    return {
+      biome: "creative-workshop",
+      baseColor: "#F38ACF",
+      accentColor: "#8A7DFF",
+    };
+  }
+
+  return {
+    biome: "uncharted-world",
+    baseColor: "#9AA5B1",
+    accentColor: "#D9E2EC",
+  };
+}
+
+export function computePlanetVisual(repo: PlanetRepoInput): PlanetVisual {
+  const {
+    stars = 0,
+    forks = 0,
+    openIssues = 0,
+    closedIssuesRecent = 0,
+    questCount = 0,
+    archived = false,
+    hasLore = false,
+    focusState = "RESTING",
+    releaseCount = 0,
+  } = repo;
+
+  const biomeData = getBiome(repo.language, repo.topics || []);
+
+  const radius = clamp(0.9 + logScale(stars) * 0.5, 0.9, 2.8);
+  const moonCount = clamp(Math.floor(logScale(forks) * 2), 0, 5);
+
+  const focusBoost =
+    focusState === "NOW" ? 1 :
+    focusState === "NEXT" ? 0.6 :
+    0.2;
+
+  const orbitRadius =
+    focusState === "NOW" ? 8 + moonCount :
+    focusState === "NEXT" ? 14 + moonCount :
+    22 + moonCount * 2;
+
+  const spinSpeed = archived ? 0.001 : focusState === "NOW" ? 0.01 : focusState === "NEXT" ? 0.006 : 0.003;
+  const glowIntensity = archived ? 0.08 : clamp(0.15 + focusBoost + logScale(stars) * 0.25, 0.15, 1.4);
+  const stormIntensity = clamp(openIssues * 0.04 - closedIssuesRecent * 0.02, 0, 1);
+  const lavaActivity = clamp(openIssues * 0.03, 0, 1);
+  const questBeacons = clamp(questCount, 0, 8);
+  const ringPresence = stars > 20 || releaseCount > 3 || hasLore;
+  const ringDensity = ringPresence ? clamp(0.2 + logScale(releaseCount + stars) * 0.2, 0.2, 1) : 0;
+
+  return {
+    baseColor: biomeData.baseColor,
+    accentColor: biomeData.accentColor,
+    biome: biomeData.biome,
+    radius,
+    atmosphereIntensity: archived ? 0.05 : clamp(0.2 + focusBoost * 0.6, 0.1, 1),
+    cloudCoverage: clamp(0.15 + stormIntensity * 0.5, 0.1, 0.9),
+    ringPresence,
+    ringDensity,
+    moonCount,
+    surfaceRoughness: clamp(0.35 + openIssues * 0.02, 0.3, 1),
+    surfaceMetalness: biomeData.biome === "industrial-foundry" ? 0.45 : 0.12,
+    lavaActivity,
+    orbitRadius,
+    orbitSpeed: archived ? 0 : focusState === "NOW" ? 0.18 : focusState === "NEXT" ? 0.11 : 0.05,
+    axialTilt: hasLore ? 0.45 : 0.18,
+    spinSpeed,
+    glowIntensity,
+    questBeacons,
+    stormIntensity,
+    haloPulse: archived ? 0 : clamp(releaseCount * 0.08 + focusBoost * 0.3, 0, 1),
+  };
+}
+Update tracking docs
+In WHATS-DONE.md, add:
+
+text
+### Hyper 3D Planning
+- [x] Defined repo-data → planet-appearance mapping system
+- [x] Defined accessibility-first 3D principles
+- [x] Defined Universe View as an enhancement layer over the 2D Hub
+- [ ] Implement `PlanetMesh.tsx`
+- [ ] Implement `UniverseScene.tsx`
+- [ ] Add Universe/List toggle
+- [ ] Test reduced-motion behaviour in 3D mode
+In AGENT-START.md, add a section like:
+
+text
+## Hyper 3D Direction
+
+The next visual phase is a React Three Fiber universe view.
+
+Important rule:
+- 3D is a visual enhancement layer over the existing data pipeline and accessible 2D Hub
+- all visuals must derive from real repo/activity/quest/lore data
+- do not build decorative random planets with no data meaning
+- preserve keyboard access and reduced-motion support
+Fastest way to commit it
+You can push this straight from the browser with github.dev or normal GitHub file editing. GitHub’s browser editor supports editing multiple files and then Commit & Push, and the regular repo UI also supports creating or uploading files directly.
+
+Browser way
+Open the repo
+
+Press .
+
+Create the files above
+
+Paste the content
+
+Commit with:
+
+text
+docs: add Hyper 3D visual mapping system
+Then a second commit:
+
+text
+feat: scaffold planet visual types and computePlanetVisual
+My recommendation
+Do not jump straight into fancy shaders tomorrow.
+
+Do this order:
+
+Add docs + type + compute function
+
+Render one test planet from real repo data
+
+Build UniverseScene
+
+Add toggle from List View ↔ Universe View
+
+Then add rings, moons, storms, beacons
+
+That keeps the magic tied to truth, which is exactly why this project is special.
+
+Would you like me to write the next paste-ready files too: PlanetMesh.tsx and UniverseScene.tsx?

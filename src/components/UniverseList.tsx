@@ -1,12 +1,33 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import type { FocusState, Planet } from '@/types/planet';
 import { matchesQuery } from '@/lib/mergeData';
 import { PlanetCard } from './PlanetCard';
 import { PlanetSheet } from './PlanetSheet';
 import { FocusControl, type FocusFilter } from './FocusControl';
 import { SearchControl } from './SearchControl';
+import { UniverseViewToggle, type ViewMode } from './UniverseViewToggle';
+
+// three.js + R3F is ~600kB. The 2D hub is the tool people open every morning and
+// it must not pay for a renderer it isn't using. ssr:false because WebGL has no
+// meaning on the server.
+const UniverseScene = dynamic(
+  () => import('./UniverseScene').then((m) => m.UniverseScene),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="flex h-[70vh] min-h-[420px] items-center justify-center rounded-xl
+                   border border-edge bg-black/40 text-inkDim"
+        role="status"
+      >
+        Waking the universe…
+      </div>
+    ),
+  }
+);
 
 interface Props {
   planets: Planet[];
@@ -24,6 +45,8 @@ export function UniverseList({ planets, biomes }: Props) {
   const [focus, setFocus] = useState<FocusFilter>('ALL');
   const [biome, setBiome] = useState('ALL');
   const [open, setOpen] = useState<Planet | null>(null);
+  // List is the default. The universe is the reward, never the requirement.
+  const [view, setView] = useState<ViewMode>('list');
   // RESTING is collapsed by default: 67 quiet worlds must never bury the 10
   // that actually want you today.
   const [showResting, setShowResting] = useState(false);
@@ -70,7 +93,10 @@ export function UniverseList({ planets, biomes }: Props) {
   return (
     <>
       <div className="flex flex-col gap-4">
-        <SearchControl value={query} onChange={setQuery} />
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <SearchControl value={query} onChange={setQuery} />
+          <UniverseViewToggle value={view} onChange={setView} />
+        </div>
         <FocusControl
           value={focus}
           counts={counts}
@@ -88,8 +114,17 @@ export function UniverseList({ planets, biomes }: Props) {
         {questsVisible} {questsVisible === 1 ? 'quest' : 'quests'}
       </p>
 
-      <div id="universe" className="mt-6 space-y-10">
-        {GROUPS.map(({ state, title, blurb }) => {
+      {/* Same data, same filters, same search, same PlanetSheet — the 3D view is
+          a skin over the hub, not a second application. */}
+      {view === 'universe' && (
+        <div id="universe" className="mt-6">
+          <UniverseScene planets={visible} onSelect={openPlanet} />
+        </div>
+      )}
+
+      <div id={view === 'list' ? 'universe' : undefined} className="mt-6 space-y-10">
+        {view === 'list' &&
+          GROUPS.map(({ state, title, blurb }) => {
           const group = visible.filter((planet) => planet.focusState === state);
           if (group.length === 0) return null;
 
@@ -133,9 +168,9 @@ export function UniverseList({ planets, biomes }: Props) {
                   ))}
                 </ul>
               )}
-            </section>
-          );
-        })}
+              </section>
+            );
+          })}
 
         {visible.length === 0 && (
           <p className="rounded-xl border border-dashed border-edge px-4 py-10 text-center text-inkDim">

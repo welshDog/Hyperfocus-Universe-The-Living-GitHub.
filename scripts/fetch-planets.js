@@ -152,6 +152,49 @@ async function fetchQuests(user, repo) {
   return { quests: [], questSource: 'none' };
 }
 
+/**
+ * Signals the 3D layer needs and the repo list endpoint does not carry.
+ *
+ * closedIssuesRecent is what lets storms HEAL — without it a planet with open
+ * issues is permanently stormy no matter how much work you do, which would make
+ * the most emotionally important mechanic in the universe a lie.
+ */
+async function fetchHealthSignals(user, repo) {
+  const out = { closedIssuesRecent: 0, releaseCount: 0, latestReleaseAt: null };
+  const since = new Date(Date.now() - 30 * DAY).toISOString();
+
+  try {
+    const res = await gh(
+      `${API}/repos/${user}/${repo.name}/issues?state=closed&since=${since}&per_page=100`
+    );
+    if (res.ok) {
+      const issues = await res.json();
+      if (Array.isArray(issues)) {
+        out.closedIssuesRecent = issues.filter(
+          (i) => !i.pull_request && i.closed_at && i.closed_at >= since
+        ).length;
+      }
+    }
+  } catch {
+    /* a planet with no health signal is quiet, not broken */
+  }
+
+  try {
+    const res = await gh(`${API}/repos/${user}/${repo.name}/releases?per_page=100`);
+    if (res.ok) {
+      const releases = await res.json();
+      if (Array.isArray(releases)) {
+        out.releaseCount = releases.length;
+        out.latestReleaseAt = releases[0]?.published_at ?? null;
+      }
+    }
+  } catch {
+    /* ditto */
+  }
+
+  return out;
+}
+
 const LANGUAGE_BIOME = {
   TypeScript: 'neon-megacity',
   JavaScript: 'neon-megacity',
@@ -238,6 +281,16 @@ async function main() {
     );
   }
 
+  const health = TOKEN
+    ? await mapWithConcurrency(repos, CONCURRENCY, (r) => fetchHealthSignals(USER, r))
+    : repos.map(() => ({ closedIssuesRecent: 0, releaseCount: 0, latestReleaseAt: null }));
+
+  if (TOKEN) {
+    const healed = health.filter((h) => h.closedIssuesRecent > 0).length;
+    const shipped = health.filter((h) => h.releaseCount > 0).length;
+    log(`   Health: ${healed} repos closed issues in 30d · ${shipped} have releases.`);
+  }
+
   let seeded = 0;
   const planets = repos.map((repo, i) => {
     const seed = seedByRepo.get(repo.name);
@@ -267,6 +320,13 @@ async function main() {
       forks: repo.forks_count,
       watchers: repo.watchers_count,
       openIssues: repo.open_issues_count,
+      // Repo size in KB. This is the 3D layer's radius signal: stars max out at
+      // 3 across the whole universe, so star-driven size would make all 84
+      // planets identical. Codebase size actually varies by orders of magnitude.
+      sizeKb: repo.size,
+      closedIssuesRecent: health[i].closedIssuesRecent,
+      releaseCount: health[i].releaseCount,
+      latestReleaseAt: health[i].latestReleaseAt,
       archived: repo.archived,
       isFork: repo.fork,
       createdAt: repo.created_at,

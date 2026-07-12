@@ -133,6 +133,45 @@ The old constellation *claimed* WCAG AA and shipped zero keyboard shortcuts and 
       part), and a real screen-reader pass (NVDA/VoiceOver). Nobody has *driven* this
       with assistive tech. Until they have, we claim no WCAG conformance.
 
+### 🌌 Hyper 3D — Universe View (built 2026-07-12)
+
+- [x] `docs/PLANET-VISUAL-MAPPING.md` — the mapping system, **recalibrated to the real data**
+- [x] `src/types/planetVisual.ts` + `src/lib/computePlanetVisual.ts`
+- [x] `src/components/PlanetMesh.tsx` — sphere, atmosphere, rings, moons, quest beacons,
+      storm/lava emissive, release flare
+- [x] `src/components/UniverseScene.tsx` — concentric NOW/NEXT/RESTING shells, orbit camera
+- [x] `src/components/UniverseViewToggle.tsx` — List ⇄ Universe 3D (List is the default)
+- [x] Fetcher extended: `sizeKb`, `closedIssuesRecent`, `releaseCount`, `latestReleaseAt`
+- [x] three.js dynamically imported (`ssr: false`) — **First Load JS 103 kB → 105 kB**,
+      so the 2D hub does not pay for a renderer it isn't using
+
+**🔴 The spec would have shipped 84 identical spheres.** It mapped stars → size and
+forks → moons. Measured against reality: max stars is **3**, max forks is **1**. Every
+planet would have been the same size with **zero moons**. Recalibrated to signals that
+actually vary here:
+
+| Instead of | Use | Result |
+|---|---|---|
+| stars → radius | **`sizeKb`** (1 → 481,833) | **65 distinct radii** across 84 worlds |
+| forks → moons | **`lore.manualConnections`** | 5 worlds, 11 moons — and it rewards writing lore |
+| stars > 20 → rings | **lore present or a release** | 7 ringed worlds (the original gate would have meant *zero rings forever*) |
+
+Measured variety: 65 radii · 21 stormy · 8 with quest beacons · 7 ringed · 5 with moons ·
+11 frozen archives. Only 10 worlds share a visual signature.
+
+`closedIssuesRecent` currently reads **0 across all 84** — nothing is healing yet. That's
+a true fact about the universe, not a bug: close an issue and that world's storm recedes.
+
+**Accessibility:** the canvas is `aria-hidden` and not focusable, because you cannot Tab
+to a sphere inside a `<canvas>` and pretending you can is how the old constellation
+ended up advertising keyboard shortcuts it never had. Every planet gets a real DOM
+`<button>` beside the canvas. `prefers-reduced-motion` stops orbit, spin, moons,
+starfield and camera auto-rotate.
+
+- [ ] Not yet done: axe/screen-reader pass **on the Universe view** specifically
+
+---
+
 ### 🚀 Deployed
 
 - [x] **LIVE: https://hyperfocus-universe-the-living-hub.vercel.app** (production)
