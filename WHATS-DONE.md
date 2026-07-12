@@ -210,6 +210,58 @@ the planet buttons, no console errors, no horizontal overflow at 390px.
 
 ---
 
+### 🪐 Descend mode — one hero world at a time (2026-07-12)
+
+Two modes, one hero. **System view stays cheap and legible; the entire spectacle
+budget is spent on the single world you descend into.**
+
+Why, in one number: at system scale a planet renders at **12–58 pixels**. Shoreline
+foam, cloud shadows and city lights are smaller than the anti-aliasing. Rendering a
+6-layer procedural stack 84 times pays for detail that is *physically invisible*.
+So it renders **once**, on the world you chose — and descending into one world **is**
+choosing one world to work on. The spectacle became the reward for focusing.
+
+- [x] `src/lib/planetDNA.ts` — the genome. **Shape comes from a hash of `repoId`
+      (permanent — a world you can't learn is a world you can't return to); STATE
+      comes from live GitHub data (storms, moons, cities — these change as you work).**
+      A trait is never in both.
+- [x] `src/components/HeroPlanet.tsx` — GLSL: terrain + ocean with depth and a
+      shoreline band + ice caps + lava seams + night-side cities + drifting storm
+      bands · parallax cloud shell · Fresnel atmosphere · rings · moons · quest beacons
+- [x] `src/components/DescendCamera.tsx` — system ⇄ hero in one move; **cuts instead
+      of flying under reduced motion** (a camera tween IS motion)
+- [x] Fetcher gained `openPRs`, `languageMix`, `hasDocs`
+
+**Third spec, third time the mapping table was calibrated for someone else's repos.**
+Measured against the real 84:
+
+| Spec wanted | Reality | What shipped |
+|---|---|---|
+| Stars → city lights | 6 of 84 have any stars | Kept — as a **rare reward**, never structural. Six worlds light up at night. |
+| PRs → moons | **18 of 84** | ✅ Adopted. Beats forks (max 1) and lore links (5). |
+| Language *mix* → biome bands | Only primary language was fetched | ✅ Now fetched. 65 of 84 have a real mix. |
+| Deployment health → shield ring | **No such GitHub signal exists** | Cut. Invented data is a lie. |
+| Docs quality → knowledge towers | No objective measure; 77 of 84 have a README | **Inverted**: the 7 worlds with *no* README render **barren**. "This world has no map." |
+
+A signal can be rare and still good — but only as a **bonus**, never as the backbone.
+Stars→size would have made 84 identical spheres. Stars→city-lights on six worlds is lovely.
+
+#### 👁️ What the eye test caught (again)
+1. Focusing the descend panel **scrolled the page**, leaving the world you just flew
+   into above the fold. `preventScroll` + `scrollIntoView` on the canvas.
+2. **Land and ocean were both blue** — a `living-mirror` world's biome colour *is* blue,
+   so continents were invisible. Land is now pulled 55% toward warm terrain.
+3. **Clouds smothered the planet** — the mottling was cloud, not land. The terrain
+   shader was working perfectly and nobody could see it.
+4. The atmosphere Fresnel was a **solid blue donut**; the ring was a **hairline** edge-on.
+
+Verified: axe **0 violations on the descended state**, Escape returns to the system and
+restores focus to the exact world, reduced-motion frames **byte-identical 3s apart**,
+no shader compile errors, First Load JS **106 kB** (the whole shader stack is in the
+lazy chunk — the 2D hub pays ~1 kB for it).
+
+---
+
 ### 🚀 Deployed
 
 - [x] **LIVE: https://hyperfocus-universe-the-living-hub.vercel.app** (production)

@@ -189,8 +189,59 @@ async function fetchQuests(user, repo) {
  * the most emotionally important mechanic in the universe a lie.
  */
 async function fetchHealthSignals(user, repo) {
-  const out = { closedIssuesRecent: 0, releaseCount: 0, latestReleaseAt: null };
+  const out = {
+    closedIssuesRecent: 0,
+    releaseCount: 0,
+    latestReleaseAt: null,
+    openPRs: 0,
+    languageMix: {},
+    hasDocs: false,
+  };
   const since = new Date(Date.now() - 30 * DAY).toISOString();
+
+  // Open PRs -> moons on the hero planet. Measured: 18 of 84 repos have one,
+  // which beats forks (4) and lore links (5). A signal that actually varies.
+  try {
+    const res = await gh(`${API}/repos/${user}/${repo.name}/pulls?state=open&per_page=100`);
+    if (res.ok) {
+      const prs = await res.json();
+      if (Array.isArray(prs)) out.openPRs = prs.length;
+    }
+  } catch {
+    /* no PRs is a fact, not a failure */
+  }
+
+  // Byte breakdown per language -> the hero planet's biome bands.
+  try {
+    const res = await gh(`${API}/repos/${user}/${repo.name}/languages`);
+    if (res.ok) {
+      const langs = await res.json();
+      if (langs && typeof langs === 'object') {
+        const total = Object.values(langs).reduce((n, v) => n + v, 0);
+        if (total > 0) {
+          // Top 3, as fractions. Keep it small: this ships to the browser.
+          out.languageMix = Object.fromEntries(
+            Object.entries(langs)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 3)
+              .map(([k, v]) => [k, Math.round((v / total) * 100) / 100])
+          );
+        }
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+
+  // "Docs quality" has no objective measure and the spec's version was invented.
+  // This is the honest, checkable version: does the repo have a README at all?
+  // (The WHATS-DONE half is already known from the quest fetch.)
+  try {
+    const res = await gh(`${API}/repos/${user}/${repo.name}/readme`);
+    out.hasDocs = res.ok;
+  } catch {
+    /* ignore */
+  }
 
   try {
     const res = await gh(
@@ -317,7 +368,10 @@ async function main() {
   if (TOKEN) {
     const healed = health.filter((h) => h.closedIssuesRecent > 0).length;
     const shipped = health.filter((h) => h.releaseCount > 0).length;
-    log(`   Health: ${healed} repos closed issues in 30d · ${shipped} have releases.`);
+    const withPRs = health.filter((h) => h.openPRs > 0).length;
+    const docs = health.filter((h) => h.hasDocs).length;
+    log(`   Health: ${healed} closed issues in 30d · ${shipped} have releases.`);
+    log(`   Hero:   ${withPRs} have open PRs (moons) · ${docs} have a README (towers).`);
   }
 
   let seeded = 0;
@@ -356,6 +410,10 @@ async function main() {
       closedIssuesRecent: health[i].closedIssuesRecent,
       releaseCount: health[i].releaseCount,
       latestReleaseAt: health[i].latestReleaseAt,
+      // Hero-planet signals (descend mode only — invisible at system scale).
+      openPRs: health[i].openPRs,
+      languageMix: health[i].languageMix,
+      hasDocs: health[i].hasDocs || questResults[i].questSource === 'tracker',
       archived: repo.archived,
       isFork: repo.fork,
       createdAt: repo.created_at,

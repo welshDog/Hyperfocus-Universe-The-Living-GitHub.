@@ -1,0 +1,136 @@
+all the heavy planet detail belongs in a descend/focus mode, not in the system view. At 12–58px on screen, the only thing that matters is silhouette, colour, orbit and a couple of readable status markers; the 6-layer shader stack should be reserved for one selected hero planet at a time.
+
+Why your critique is spot on
+At the current camera/FOV, planets are small enough that shoreline foam, cloud shadows and city lights are literally below the “visible detail” threshold, but every layer would still cost a full draw call and shader pass per planet.
+
+Procedural planet demos and astronomy shaders show that realistic atmospheres, rings, clouds and terrain use multiple textures and uniforms per object; replicating that across dozens of worlds is expensive and overkill for tiny dots.
+
+Hero-style planet shaders (Earth, Saturn, custom alien worlds) are designed for close-up viewing, not icon-size system maps, which matches exactly what you’re arguing for.
+
+So yeah: keep the current simple, legible “what to work on” system at 60fps, and hang the spectacle off a single zoomed-in planet at a time.
+
+Recommended architecture: two modes, one hero
+1. System view (what you already have)
+Keep this close to how it is now:
+
+Instanced basic meshes (spheres/icosahedrons) with cheap materials: solid albedo, simple emissive, maybe one noise-based rim.
+
+Per-repo differentiation via:
+
+radius (size),
+
+orbit radius/angle,
+
+colour “family”,
+
+basic state icons (e.g. a small overlay for “has PRs”, “has quests”).
+
+Interaction: hover to preview, click to “select world and descend”.
+
+No multi-layer shaders, no render-to-texture, no volumetric effects here. It stays as your fast “universe map UI”.
+
+2. Focus view / descend mode (one world)
+This is the hero planet scene that you show when a repo is selected:
+
+Camera transitions:
+
+System → orbit of world → close planet view in one smooth move (Three.js camera tween / R3F spring).
+
+Only one planet uses the full shader stack:
+
+higher-res mesh,
+
+terrain/ocean/cloud/atmosphere overlays,
+
+rings, moons, lights.
+
+All other planets either:
+
+disappear,
+
+or render as ultra-cheap blurred dots/background constellations.
+
+This matches your core product idea: choosing one world to descend into is choosing one world to focus on. The “wow” becomes the reward for hyperfocus, which fits the HyperFocus z0ne thesis perfectly.
+
+Hero planet shader: lean but lush
+You still get your full cinematic planet, just for one repo at a time:
+
+Base mesh: ico-sphere or subdivided sphere with vertex-displacement noise for terrain.
+
+Day/night textures or procedural colours: use a day colour ramp and a night emissive map (or procedural sampling) like the classic Earth shader examples.
+
+Ocean: mask by height (sea level) with depth-based colour gradient and a thin shoreline glow band; cheap to implement with a couple of uniforms.
+
+Clouds: second sphere slightly larger than the surface, with scrolling noise; can be one extra material, not full volumetric.
+
+Atmosphere rim: simple Fresnel term (dot of normal and view) for edge glow, inspired by Earth/Saturn shaders.
+
+Moons/rings: separate meshes driven by your PRs→moons mapping and any other signals you keep.
+
+This is exactly how people build realistic planets in Three.js/WebGL today: one hero globe with multiple textures/uniforms, cloud shells and atmospherics, all focused on a single object in view.
+
+Revised mapping table (non-fatal signals only)
+I’d align with the logic you just laid out:
+
+PRs → moons
+
+This is a great, honest signal: 18/84 is enough for visible variety and feels meaningful.
+
+Language mix → biome split
+
+Use /languages for byte distribution and colour the planet’s bands/biomes accordingly.
+
+“Has docs” → knowledge towers / surface grid clarity
+
+Define this as “has README + WHATS-DONE”, like you said; more towers or cleaner surface grid when present.
+
+Stars / rare events → city lights / special orbital glow
+
+Keep this as a pure reward; only a handful of worlds get night-side cities or special halos.
+
+Workflow health / last run → shield ring
+
+If you later wire in your pipeline, base the shield on that; until then, drop it or keep as cosmetic.
+
+Everything else from the “invisible detail” list (shore foam complexity, micro-weather everywhere, volumetric clouds on every dot) moves into the hero shader only.
+
+Component structure idea (high level)
+Not writing code yet, but this is the rough shape in React Three Fiber:
+
+<UniverseScene>
+
+Handles camera, system vs focus state.
+
+Renders <PlanetDots> for all repos in system mode (instanced, cheap).
+
+Renders <HeroPlanet> when one repo is selected (single high-detail planet).
+
+<PlanetDots>
+
+Instanced mesh/material: position, scale, colour; hover/click to select.
+
+<HeroPlanet>
+
+Accepts planetDNA derived from repoId/hashAngle.
+
+Internally composes <PlanetSurface>, <PlanetOcean>, <PlanetClouds>, <PlanetAtmosphere>, <PlanetMoonsAndRings>.
+
+This keeps the complexity in one place and lets you evolve the hero shader without destabilising the main universe.
+
+My verdict back to you
+Agree fully: 6-layer planets across 80+ worlds at 12px is wasted GPU and visual effort.
+
+Agree fully: rare signals are great as rewards, not as structural backbone.
+
+Agree fully: descend/focus mode is the correct expression of your product philosophy.
+
+So my answer: yes, let’s build descend mode exactly like you described.
+Next step I’d suggest: we define:
+
+the exact planetDNA struct (what comes from hashAngle + GitHub data), and
+
+the props & responsibilities for <HeroPlanet> and its sub-layers,
+
+so you can paste it into the repo and iterate on the shader from there.
+
+If you want, I’ll do that next as a paste-ready spec for HeroPlanet + descend camera flow, keeping system view untouched and cheap.

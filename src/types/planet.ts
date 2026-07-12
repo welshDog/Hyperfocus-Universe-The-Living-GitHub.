@@ -38,6 +38,13 @@ export interface RawPlanet {
   closedIssuesRecent: number;
   releaseCount: number;
   latestReleaseAt: string | null;
+  /** Open pull requests -> moons. 18 of 84 — beats forks (max 1) as a signal. */
+  openPRs: number;
+  /** Top 3 languages as fractions -> the hero planet's biome bands. */
+  languageMix: Record<string, number>;
+  /** Has a README (or a WHATS-DONE). 77 of 84 — so it is used INVERSELY:
+   *  the 7 worlds with no docs render barren. "This world has no map." */
+  hasDocs: boolean;
   archived: boolean;
   isFork: boolean;
   createdAt: string;

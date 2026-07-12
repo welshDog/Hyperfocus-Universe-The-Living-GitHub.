@@ -12,7 +12,11 @@ import type { BiomeDefinition, FocusState, Lore, Planet, RawPlanet } from '@/typ
  * uses its computed biome and colour. That is why 67 of 84 worlds render at all.
  */
 
-const raw = planetsFile.planets as RawPlanet[];
+// Through `unknown`: TypeScript infers a literal key union for every distinct
+// languageMix shape in the JSON (35+ of them), which will never structurally
+// match Record<string, number>. The runtime shape is guaranteed by
+// scripts/validate-data.js, which is where this contract is actually enforced.
+const raw = planetsFile.planets as unknown as RawPlanet[];
 const lore = (loreFile.planetLore ?? []) as Lore[];
 const biomeDefs = (loreFile.biomeDefinitions ?? {}) as Record<string, BiomeDefinition>;
 
