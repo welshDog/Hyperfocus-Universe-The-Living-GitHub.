@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-void text-ink antialiased;
+  }
+
+  /* Focus must be VISIBLE on every interactive element. The old constellation
+     claimed keyboard support and shipped none — this is the gate that makes it
+     true. :focus-visible so mouse users don't get rings they didn't ask for. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-focus ring-offset-2 ring-offset-void rounded-md;
+  }
+}
+
+@layer components {
+  /* Skip link: first tab stop, invisible until focused. */
+  .skip-link {
+    @apply absolute left-4 -top-16 z-50 rounded-md bg-focus px-4 py-2
+           font-semibold text-void transition-[top] focus:top-4;
+  }
+}
+
+/* A person who asks their OS to reduce motion is telling us something true.
+   Honour it globally: no transitions, no future orbit animation, no exceptions.
+   Nothing in this app requires movement to be understood. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .starfield {
+    display: none;
+  }
+}
+
+/* Optional decoration only. Carries no information, hidden from assistive tech,
+   and removed entirely under reduced-motion. */
+.starfield {
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, #ffffff55, transparent),
+    radial-gradient(1px 1px at 70% 20%, #ffffff44, transparent),
+    radial-gradient(1px 1px at 40% 70%, #ffffff33, transparent),
+    radial-gradient(2px 2px at 85% 60%, #ffffff33, transparent),
+    radial-gradient(1px 1px at 10% 85%, #ffffff44, transparent);
+  background-repeat: repeat;
+  background-size: 500px 500px;
+}

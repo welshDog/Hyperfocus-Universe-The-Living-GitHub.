@@ -1,0 +1,55 @@
+{
+  "_note": "HARVESTED from hyperfocus-constellation (the 2026 SVG prototype). These are FACTS (repo, category, description, colour) rescued from the old hardcoded roster - NOT lore. The merge layer uses this as a FALLBACK so that every repo gets a biome and a colour even before you hand-write its lore. Upgrade any entry by adding a full lore.json entry with the same repoId; lore.json always wins.",
+  "_source": "hyperfocus-constellation/index.html (inline script, 24 hardcoded repos)",
+  "_harvestedAt": "2026-07-12",
+
+  "categoryToBiome": {
+    "Core Empire": "orbital-hub",
+    "Community": "orbital-hub",
+    "Creative": "creative-workshop",
+    "Social": "creative-workshop",
+    "Dev Tools": "neon-megacity",
+    "Neurodivergent Tools": "neon-megacity",
+    "Special Projects": "neon-megacity",
+    "AI & ML": "living-mirror",
+    "Testing Systems": "living-mirror",
+    "Hardware Systems": "industrial-foundry",
+    "Enterprise Tools": "industrial-foundry",
+    "Documentation": "crystalline-library"
+  },
+  "_biomeMapNote": "12 old categories folded into your 6 existing biomes. Four are a stretch and are yours to re-call: Social->creative-workshop, AI & ML->living-mirror, Neurodivergent Tools->neon-megacity, Special Projects->neon-megacity. If you want new biomes for those, name them yourself - that's lore, not my job.",
+
+  "roster": [
+    { "repoId": "HYPERFOCUSzone-starting-code-", "category": "Core Empire", "description": "The beating heart with Orchestra conductor, Memory Crystals, Dopamine Guardian", "color": "#9333ea" },
+    { "repoId": "HYPERFOCUS-UNIFIED-EMPIRE", "category": "Core Empire", "description": "Empire-level coordination hub managing the entire constellation", "color": "#9333ea" },
+    { "repoId": "-HYPERFOCUS-ZONE-Omega-Vault-", "category": "Core Empire", "description": "Legendary archive of artifacts and relics forged in pure focus", "color": "#9333ea" },
+    { "repoId": "Hyper-vibe-engine", "category": "Creative", "description": "Turn images into soundtracks. Turn stories into portals", "color": "#32b8c6" },
+    { "repoId": "hyper-vibe-studio", "category": "Creative", "description": "VS Code automation revolution v3.0 for creative workflows", "color": "#32b8c6" },
+    { "repoId": "BROski-Hyperspace-template", "category": "Dev Tools", "description": "ADHD-friendly development environment with vibe engine", "color": "#3b82f6" },
+    { "repoId": "HyperSpace", "category": "Dev Tools", "description": "TypeScript-powered hyperspace for rapid development", "color": "#3b82f6" },
+    { "repoId": "github-ai-mangaer-helper", "category": "Dev Tools", "description": "Advanced GitHub repository security scanner with AI assistance", "color": "#3b82f6" },
+    { "repoId": "hl-model-api", "category": "AI & ML", "description": "Proving AI can work on any hardware - even weak laptops", "color": "#10b981" },
+    { "repoId": "genai-stack", "category": "AI & ML", "description": "Langchain + Docker + Neo4j + Ollama advanced stack", "color": "#10b981" },
+    { "repoId": "HYPERFOCUS-ZONE-NEURO-SOCIAL-DREAMER-", "category": "Social", "description": "Reimagining social media for neurodivergent creators", "color": "#ec4899" },
+    { "repoId": "My-Social-COMs-Buddy", "category": "Social", "description": "AI to help communicate with dyslexia", "color": "#ec4899" },
+    { "repoId": "hyperfocus-neurodivergent-HYPER-tool", "category": "Neurodivergent Tools", "description": "Specialized JavaScript tool for neurodivergent minds", "color": "#f59e0b" },
+    { "repoId": "HYPERFOCUSzone-Community", "category": "Community", "description": "Community showcase for onboarding and collaboration", "color": "#8b5cf6" },
+    { "repoId": "HYPERFOCUSzone-DEV-Community", "category": "Community", "description": "Developer-focused collaboration space", "color": "#8b5cf6" },
+    { "repoId": "Lyndz-Wish-for-Help-to-build-HyperfocusZone", "category": "Community", "description": "The heart that keeps the entire ecosystem alive", "color": "#8b5cf6" },
+    { "repoId": "RAZ-PI-EYE", "category": "Hardware Systems", "description": "Raspberry Pi CPU monitoring with wifi/bluetooth", "color": "#ef4444" },
+    { "repoId": "tHe-HYPER-dOoK-STorY", "category": "Documentation", "description": "Living story and documentation of the hyperfocus journey", "color": "#6b7280" },
+    { "repoId": "HyperLinks", "category": "Documentation", "description": "Connecting all constellation pieces for easy navigation", "color": "#6b7280" },
+    { "repoId": "HYPERFOCUS-ZONE-TEST-INFO-SYSYTEM", "category": "Testing Systems", "description": "Where humans and AI become the ultimate team", "color": "#14b8a6" },
+    { "repoId": "hyperfocus-constellation", "category": "Special Projects", "description": "The original SVG constellation - the world this universe grew from", "color": "#f97316" },
+    { "repoId": "vscode-java", "category": "Enterprise Tools", "description": "Java Language Support customized for the empire", "color": "#84cc16" },
+    { "repoId": "grafana-by-example", "category": "Enterprise Tools", "description": "Monitoring and visualization system for empire metrics", "color": "#84cc16" }
+  ],
+
+  "_dropped": [
+    "https-github.com-welshDog-HYPERfocusZone-Gemmi-build - the old roster's repo name was a mangled URL, not a real repo slug. Re-add it once you confirm the real name."
+  ],
+
+  "_provenInteractions": "The old prototype ACTUALLY shipped and worked: hover tooltip, click-to-GitHub, category filter (dim non-matching to 0.2 opacity), live search across name/description/category, zoom slider, portal rotate mode, canvas starfield, tabindex=0 + Enter/Space on each star. That's a validated interaction model - port it to 3D rather than reinventing it. PlanetSheet = the tooltip. FocusControl = the category filter.",
+
+  "_doNotRepeat": "The old prototype hardcoded x/y positions per repo. That is why it froze at 24 repos and never grew. Positions in this universe MUST be computed from data (orbit ring by activity, angle by index/hash), never hand-placed."
+}

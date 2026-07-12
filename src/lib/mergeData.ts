@@ -1,0 +1,92 @@
+import planetsFile from '@data/planets.json';
+import loreFile from '@data/lore.json';
+import type { BiomeDefinition, FocusState, Lore, Planet, RawPlanet } from '@/types/planet';
+
+/**
+ * Merge live GitHub facts with hand-written lore.
+ *
+ * Precedence (as specified):
+ *   live GitHub facts  >  lore narrative overrides  >  seed/computed fallback
+ *
+ * Lore is OPTIONAL. A repo with no lore entry still becomes a planet — it just
+ * uses its computed biome and colour. That is why 67 of 84 worlds render at all.
+ */
+
+const raw = planetsFile.planets as RawPlanet[];
+const lore = (loreFile.planetLore ?? []) as Lore[];
+const biomeDefs = (loreFile.biomeDefinitions ?? {}) as Record<string, BiomeDefinition>;
+
+const loreByRepoId = new Map(lore.map((l) => [l.repoId, l]));
+
+function toBiomeLabel(biome: string): string {
+  return biome
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+const merged: Planet[] = raw.map((planet) => {
+  const l = loreByRepoId.get(planet.repoId) ?? null;
+  // Lore overrides identity (biome/colour) but never live facts.
+  const biome = l?.biome ?? planet.biome;
+  return {
+    ...planet,
+    biome,
+    color: l?.color ?? planet.color,
+    displayName: l?.planetName ?? planet.repoId,
+    biomeLabel: toBiomeLabel(biome),
+    lore: l,
+  };
+});
+
+const FOCUS_ORDER: Record<FocusState, number> = { NOW: 0, NEXT: 1, RESTING: 2 };
+
+/** NOW first, then NEXT, then RESTING — each group most-recently-pushed first. */
+export function getPlanets(): Planet[] {
+  return [...merged].sort((a, b) => {
+    const byFocus = FOCUS_ORDER[a.focusState] - FOCUS_ORDER[b.focusState];
+    if (byFocus !== 0) return byFocus;
+    return new Date(b.pushedAt).getTime() - new Date(a.pushedAt).getTime();
+  });
+}
+
+export function getBiomes(): string[] {
+  return [...new Set(merged.map((p) => p.biome))].sort();
+}
+
+export function getBiomeDefinitions(): Record<string, BiomeDefinition> {
+  return biomeDefs;
+}
+
+/** Search name, slug, biome, description AND quest text — quests are the point. */
+export function matchesQuery(planet: Planet, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  const haystack = [
+    planet.displayName,
+    planet.repoId,
+    planet.biomeLabel,
+    planet.category,
+    planet.description ?? '',
+    planet.language ?? '',
+    ...planet.quests.map((quest) => quest.title),
+  ]
+    .join(' ')
+    .toLowerCase();
+  return haystack.includes(q);
+}
+
+/** "2 hours ago" — plain words, no guilt, no precision theatre. */
+export function timeAgo(iso: string): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  const mins = Math.round(ms / 60000);
+  if (mins < 60) return mins <= 1 ? 'just now' : `${mins} minutes ago`;
+  const hours = Math.round(mins / 60);
+  if (hours < 24) return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+  const days = Math.round(hours / 24);
+  if (days < 30) return days === 1 ? 'yesterday' : `${days} days ago`;
+  const months = Math.round(days / 30);
+  if (months < 12) return months === 1 ? '1 month ago' : `${months} months ago`;
+  const years = Math.round(months / 12);
+  return years === 1 ? '1 year ago' : `${years} years ago`;
+}

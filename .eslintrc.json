@@ -1,0 +1,6 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": "error"
+  }
+}

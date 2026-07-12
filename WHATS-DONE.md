@@ -4,9 +4,14 @@
 
 ---
 
-## 🎯 Current Phase: **Foundation (Level 1: It Lives)**
+## 🎯 Current Phase: **Level 1 COMPLETE — It Lives**
 
-**Goal**: Build the core vision, data model, and documentation foundation.
+**Goal**: A trustworthy data pipeline and an accessible screen that answers one
+question: *"What is my best next world and task?"*
+
+**Status**: `npm run refresh && npm run dev` renders **84 real worlds**, 10 of them
+NOW, with **13 real quests** pulled from live GitHub. Build is clean, typecheck passes,
+and the `repoId` validator fails CI on orphaned lore. Not a mock — actual data.
 
 ---
 
@@ -50,64 +55,90 @@
 
 ---
 
+### 🔌 Data Pipeline (VERIFIED — run against live GitHub 2026-07-12)
+
+- [x] **data/roster.seed.json** - 23 repo identities harvested from the old
+  `hyperfocus-constellation` prototype (category, description, colour) + a
+  12-category → 6-biome map. Facts only; no invented lore.
+- [x] **scripts/fetch-planets.js** - live GitHub fetcher
+  - ✅ Public repos only (`GET /users/:user/repos`) — private repos can never
+    leak into a committed data file
+  - ✅ Paginated (`per_page=100`)
+  - ✅ Merges seed identity, computes fallback biome/colour when unseeded
+  - ✅ Scrapes `WHATS-DONE.md` per repo → first 3 unchecked tasks become `quests`
+  - ✅ Derives `focusState` (NOW/NEXT/RESTING) from `pushed_at` — never hand-maintained
+  - ✅ Deterministic sorted output; **verified byte-identical across runs**
+  - ✅ Tokens scrubbed from all output and logs
+- [x] **scripts/validate-data.js** - guards the `repoId` join key
+  - ✅ Orphaned lore = ERROR (exit 1, fails CI) with a "did you mean" suggestion
+  - ✅ Stale roster/connections = WARNING (never fails)
+- [x] **repoId bugs fixed** — found by the validator, not by luck:
+  - `Hyperfocus-Universe-The-Living-GitHub.` → `Hyperfocus-Universe-The-Living-Hub`
+  - `HyperFocus-The-Anime` → `HyperFocus-The-Anime-Build` (real slug)
+  - Same trailing-dot slug fixed in `package.json`
+
+---
+
 ## 🚧 In Progress
 
-### None at the moment
+### 🟡 The universe is mostly quiet — and that's a data problem, not a code one
 
-Foundation complete! Next phase ready to start.
+Quest sourcing is now: **`WHATS-DONE.md` wins → open issues fill the gap → quiet.**
+That took the universe from 3 quests to **13 quests across 8 planets**.
 
----
-
-## 📋 Next Up (Level 1 Completion)
-
-### 🛠️ Build Tools & Config
-
-- [ ] **tsconfig.json** - TypeScript configuration
-- [ ] **next.config.js** - Next.js configuration  
-- [ ] **tailwind.config.ts** - Tailwind CSS theme and plugins
-- [ ] **postcss.config.js** - PostCSS configuration
-- [ ] **.eslintrc.json** - ESLint rules
-
-### 📜 Scripts
-
-- [ ] **scripts/fetch-planets.js** - GitHub API fetcher
-  - Fetch all repos for @welshDog
-  - Transform to planets.json format
-  - Handle rate limits and errors
-  - CLI arguments for different users
-
-### 🤖 GitHub Actions
-
-- [ ] **.github/workflows/refresh-planets.yml** - Auto-refresh workflow
-  - Daily cron job to update planets.json
-  - Commit changes back to repo
-  - Handle GitHub token securely
+But **76 of 84 planets still have nothing to say**, because there is no tracker
+file *and* no open issue in those repos. The pipeline is doing its job; the
+signal simply isn't there yet. The fix is not more code — it's you pushing a
+`WHATS-DONE.md` (or opening one honest issue) in the repos you actually care
+about. Every one you write lights up a planet.
 
 ---
 
-## 🔮 Future (Level 2: It Reacts)
+### 🖥️ The 2D Hub (VERIFIED — `next build` clean, real data rendered 2026-07-12)
 
-### 🎨 Frontend Components
+- [x] **Config** — `tsconfig.json`, `next.config.js`, `tailwind.config.ts` (v3, matching
+  the locked dependency), `postcss.config.js`, `.eslintrc.json`
+- [x] **src/types/planet.ts** — the shapes, with `repoId` documented as the only join key
+- [x] **src/lib/mergeData.ts** — merges live facts + lore; lore is optional, so all
+  84 worlds render whether or not anyone has written their story
+- [x] **src/app/layout.tsx / page.tsx / globals.css** — skip link, starfield (decorative,
+  `aria-hidden`, removed under reduced-motion)
+- [x] **src/components/UniverseList.tsx** — grouping, filtering, `aria-live` count,
+  RESTING collapsed by default
+- [x] **src/components/PlanetCard.tsx** — `<article>` with two real actions; never a
+  clickable div, never nested interactives
+- [x] **src/components/PlanetSheet.tsx** — real `role="dialog"`, Escape closes, focus
+  trapped, focus RESTORED to the triggering planet button
+- [x] **src/components/FocusControl.tsx** — NOW/NEXT/RESTING + biome, `aria-pressed`
+- [x] **src/components/SearchControl.tsx** — searches names, biomes AND quest text
+- [x] **.github/workflows/refresh-planets.yml** — daily cron; validator failure fails the run
 
-- [ ] **src/app/page.tsx** - Main universe page
-- [ ] **src/app/layout.tsx** - Root layout with providers
-- [ ] **src/components/Universe.tsx** - Main 3D scene
-- [ ] **src/components/Planet.tsx** - Individual planet mesh
-- [ ] **src/components/PlanetSheet.tsx** - Info panel
-- [ ] **src/components/FocusControl.tsx** - NOW/NEXT/RESTING switcher
-- [ ] **src/components/AccessibilityControls.tsx** - Motion/contrast toggles
+### ♿ Accessibility Gates — met, not promised
 
-### 🧩 Utilities
+The old constellation *claimed* WCAG AA and shipped zero keyboard shortcuts and no
+`prefers-reduced-motion`. These are in the code and verified in the built HTML:
 
-- [ ] **src/lib/github.ts** - GitHub API client
-- [ ] **src/lib/planetUtils.ts** - Planet calculation logic
-- [ ] **src/lib/mergeData.ts** - Merge planets.json + lore.json
-- [ ] **src/types/planet.ts** - TypeScript type definitions
+- [x] Every card action is a native `<button>` or a labelled `<a>` — no clickable divs
+- [x] Enter and Space open the sheet (native button semantics, not a keydown hack)
+- [x] Escape closes the sheet and returns focus to the planet that opened it
+- [x] Focus trapped inside the open dialog; visible high-contrast `:focus-visible` ring
+- [x] No hover-only information — quests are on the card, not in a tooltip
+- [x] Sheet has an accessible title (`aria-labelledby`) and a labelled Close button
+- [x] Filter state announced via `aria-live="polite"` ("Showing 17 worlds · 13 quests")
+- [x] `prefers-reduced-motion: reduce` kills all transitions and the starfield
+- [ ] **Not yet done:** a real screen-reader pass (NVDA/VoiceOver) and axe audit. The
+      markup is right; nobody has *driven* it yet. Don't tick this until someone has.
 
-### 🎨 Styling
+---
 
-- [ ] **src/app/globals.css** - Global styles and Tailwind imports
-- [ ] **Accessibility modes** - Reduced motion, high contrast
+## 📋 Next Up
+
+- [ ] Screen-reader + axe pass on the built page (see above — the last honest gap)
+- [ ] Push `WHATS-DONE.md` into the repos that matter, to light up the 76 quiet worlds
+- [ ] Deploy to Vercel
+- [ ] **Level 3 — Three.js as the reward layer**, once the list view is worth opening daily.
+      Positions must be COMPUTED from `activityScore` + focus state. The old prototype
+      hardcoded x/y per repo and that is exactly why it froze at 24 stars forever.
 
 ---
 
@@ -125,11 +156,19 @@ Foundation complete! Next phase ready to start.
 
 ## 📊 Stats
 
-**Files Created**: 8  
-**Lines of Documentation**: ~1500+  
-**Planet Lores Written**: 6  
-**Biomes Defined**: 6  
-**Commits**: 8  
+> Measured by `npm run refresh` against live GitHub on 2026-07-12. Every number
+> here comes from a script that ran. If it isn't verified, it doesn't go here.
+
+**Public repos fetched**: 84  
+**Planets rendered**: 84 (every repo gets a world — none are grey rocks)  
+**Seeded identities matched**: 17  
+**Computed fallback biomes**: 67  
+**Hand-written lores**: 6 (0 orphaned)  
+**Biomes defined**: 6  
+**Quest sources**: 1 tracker · 7 open-issues · 76 quiet ⚠️  
+**Quests extracted**: 13 across 8 planets ⚠️  
+**Focus split**: 10 NOW · 7 NEXT · 67 RESTING  
+**Validation**: 0 errors, 6 warnings (6 old roster repos deleted/renamed/private)  
 
 ---
 

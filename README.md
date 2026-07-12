@@ -71,6 +71,16 @@ Your universe stays current:
 
 ---
 
+## ♿ Accessibility status
+
+The first interface is designed for keyboard use, visible focus, dialog focus management,
+and reduced-motion preferences.
+
+Automated accessibility testing and screen-reader testing are planned and tracked.
+We do not currently claim WCAG conformance or a completed accessibility audit.
+
+---
+
 ## 🏗️ Tech Stack
 
 - **Frontend**: Next.js 14+ (App Router) + TypeScript

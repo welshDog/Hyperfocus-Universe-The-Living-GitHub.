@@ -1,0 +1,55 @@
+name: Refresh Planets
+
+on:
+  schedule:
+    # 05:00 UTC daily — the universe is fresh before the day starts.
+    - cron: '0 5 * * *'
+  workflow_dispatch: # so you can light it up on demand
+  push:
+    paths:
+      # Lore or seed changed by hand? Re-validate before it can rot.
+      - 'data/lore.json'
+      - 'data/roster.seed.json'
+      - 'scripts/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-planets
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch planets from GitHub
+        env:
+          # The default token is enough: we only read PUBLIC repos, and the
+          # fetcher scrubs the token from every line it prints.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/fetch-planets.js
+
+      - name: Validate the repoId join key
+        # Orphaned lore exits 1 and fails the run. A planet whose hand-written
+        # lore can never render is a bug, not a warning — catch it here, not in
+        # six months when you wonder why Syntax Prime looks like everything else.
+        run: node scripts/validate-data.js
+
+      - name: Commit refreshed data
+        run: |
+          if git diff --quiet -- data/planets.json; then
+            echo "No change in the universe today."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/planets.json
+          git commit -m "chore(data): refresh planets from GitHub"
+          git push

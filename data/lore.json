@@ -22,7 +22,7 @@
       "story": "The Welcome World is a lush orbital station that hovers at the center of the welshDog universe. It is run by The Guides, a collective of friendly AI agents who help explorers understand the ecosystem. Every visitor arrives here first. The Guides provide maps, explain each planet's purpose, and help travelers choose where to go next based on what they're building. The station glows warmly, and soft music plays in the background. It is never overwhelming.",
       "motto": "Start here. We'll help you find your way.",
       "color": "#10B981",
-      "manualConnections": ["THE-HYPERCODE", "HyperFocus-The-Anime", "Hyperfocus-Universe-The-Living-GitHub."],
+      "manualConnections": ["THE-HYPERCODE", "HyperFocus-The-Anime-Build","Hyperfocus-Universe-The-Living-Hub"],
       "demoUrl": null,
       "docsUrl": null
     },
@@ -35,12 +35,12 @@
       "story": "This was the first world. The Archive of Origins is a quiet, beautiful planet made of crystalline structures that shimmer with old data. The Archivists maintain it lovingly, not as a relic, but as a reminder of where the journey began. Visitors come here to see how the original constellation idea worked—connecting research nodes in 3D space. It inspired everything that came after. The planet is calm, meditative, and slightly nostalgic. New builders often visit to understand the roots of the vision.",
       "motto": "Every universe starts with a single star.",
       "color": "#8B5CF6",
-      "manualConnections": ["THE-HYPERCODE", "Hyperfocus-Universe-The-Living-GitHub."],
+      "manualConnections": ["THE-HYPERCODE", "Hyperfocus-Universe-The-Living-Hub"],
       "demoUrl": null,
       "docsUrl": null
     },
     {
-      "repoId": "HyperFocus-The-Anime",
+      "repoId": "HyperFocus-The-Anime-Build",
       "planetName": "Studio Planet",
       "biome": "creative-workshop",
       "civilization": "The Dream Animators",
@@ -66,7 +66,7 @@
       "docsUrl": null
     },
     {
-      "repoId": "Hyperfocus-Universe-The-Living-GitHub.",
+      "repoId": "Hyperfocus-Universe-The-Living-Hub",
       "planetName": "The Meta-Observatory",
       "biome": "living-mirror",
       "civilization": "The Watchers",
