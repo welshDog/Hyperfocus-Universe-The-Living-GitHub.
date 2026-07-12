@@ -168,6 +168,31 @@ ended up advertising keyboard shortcuts it never had. Every planet gets a real D
 `<button>` beside the canvas. `prefers-reduced-motion` stops orbit, spin, moons,
 starfield and camera auto-rotate.
 
+#### 👁️ The eye test — what looking at it caught that the numbers could not
+
+Driven in a real browser (Playwright + headless Chrome, WebGL via SwiftShader) and
+inspected frame by frame. Three bugs the passing build had happily hidden:
+
+1. **🔴 HYDRATION BUG — and it was already LIVE on the 2D site.** `timeAgo()` called
+   `Date.now()` during render, so the build-time HTML said "2 hours ago" and the browser
+   computed something else at hydration → React errors #418/#425 on **every page load**.
+   Never caught, because I had only ever checked the *served HTML*, never run the page.
+   Fixed: the label is baked at build (`planet.pushedLabel`) and `<TimeAgo>` refreshes it
+   after mount. Console is now clean.
+2. **The spiral.** `orbitRadius` and `orbitAngle` were derived from the *same* hash, so
+   radius and angle were correlated and every world fell on a spiral. The universe was a
+   smear.
+3. **The shells didn't read.** Fixing the spiral with a Fibonacci *sphere* gave even
+   spacing — but a sphere projects to a filled disc, so 67 RESTING worlds scattered
+   through the middle and NOW/NEXT/RESTING were indistinguishable. **This defeated the
+   entire purpose of the view.** Fixed by making each shell a flat **ring**, raking the
+   camera above the plane, and drawing faint orbit guides. It now reads as a solar system:
+   NOW is the bright inner orbit, RESTING is the dim outer one.
+
+Verified in-browser: reduced-motion frames are **byte-identical 3 seconds apart** (truly
+frozen, not merely slowed), the scene is complete and calm rather than broken, Tab reaches
+the planet buttons, no console errors, no horizontal overflow at 390px.
+
 - [ ] Not yet done: axe/screen-reader pass **on the Universe view** specifically
 
 ---

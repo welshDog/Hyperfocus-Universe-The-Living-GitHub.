@@ -35,6 +35,11 @@ const merged: Planet[] = raw.map((planet) => {
     color: l?.color ?? planet.color,
     displayName: l?.planetName ?? planet.repoId,
     biomeLabel: toBiomeLabel(biome),
+    // Computed ONCE, at build, and shipped in the HTML. Calling timeAgo() during
+    // render breaks hydration: the server renders "2 hours ago" at build time and
+    // the browser recomputes a different string, which is React error #425.
+    // <TimeAgo> takes this as its stable initial value and refreshes it after mount.
+    pushedLabel: timeAgo(planet.pushedAt),
     lore: l,
   };
 });

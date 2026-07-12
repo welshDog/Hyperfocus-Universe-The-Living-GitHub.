@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
-import type { Planet } from '@/types/planet';
-import { computePlanetVisual } from '@/lib/computePlanetVisual';
+import type { FocusState, Planet } from '@/types/planet';
+import { computeOrbit, computePlanetVisual } from '@/lib/computePlanetVisual';
 import { PlanetMesh } from './PlanetMesh';
 
 interface Props {
@@ -44,38 +44,77 @@ export function UniverseScene({ planets, onSelect }: Props) {
   const reducedMotion = useReducedMotion();
   const [focused, setFocused] = useState<string | null>(null);
 
-  const worlds = useMemo(
-    () => planets.map((planet) => ({ planet, visual: computePlanetVisual(planet) })),
-    [planets]
-  );
+  // Distribute WITHIN each focus shell, so a world's position depends on its
+  // index among its own peers. This is what makes NOW / NEXT / RESTING read as
+  // three distinct rings instead of one undifferentiated smear.
+  const worlds = useMemo(() => {
+    const shells: Record<FocusState, Planet[]> = { NOW: [], NEXT: [], RESTING: [] };
+    // Sort first so the layout is stable regardless of incoming order.
+    [...planets]
+      .sort((a, b) => a.repoId.localeCompare(b.repoId))
+      .forEach((planet) => shells[planet.focusState].push(planet));
+
+    return (Object.keys(shells) as FocusState[]).flatMap((state) =>
+      shells[state].map((planet, index) => {
+        const orbit = computeOrbit(index, shells[state].length, state, planet.repoId);
+        return {
+          planet,
+          visual: computePlanetVisual(planet),
+          position: [orbit.x, orbit.y, orbit.z] as [number, number, number],
+        };
+      })
+    );
+  }, [planets]);
 
   return (
     <div className="relative">
       <div className="h-[70vh] min-h-[420px] overflow-hidden rounded-xl border border-edge bg-black/40">
+        {/* Camera sits back far enough to hold the whole RESTING shell (r≈47) in
+            frame. The first pass framed at z=38 and the outer worlds swung right
+            past the lens — one planet filled a third of the screen. */}
+        {/* Raked from above so the three focus rings read as concentric orbits.
+            Straight-on, they collapse into one another and the hierarchy is lost. */}
         <Canvas
-          camera={{ position: [0, 14, 38], fov: 50 }}
+          camera={{ position: [0, 46, 84], fov: 45 }}
           aria-hidden="true"
           tabIndex={-1}
           dpr={[1, 1.8]}
         >
-          <ambientLight intensity={0.35} />
-          <pointLight position={[0, 0, 0]} intensity={2.2} distance={80} />
-          <directionalLight position={[20, 20, 20]} intensity={0.4} />
+          <ambientLight intensity={0.4} />
+          <pointLight position={[0, 0, 0]} intensity={3.5} distance={140} decay={1.4} />
+          <directionalLight position={[30, 30, 30]} intensity={0.35} />
 
           {/* Decorative only, and it stops dead under reduced motion. */}
-          <Stars radius={120} depth={50} count={2500} factor={4} fade speed={reducedMotion ? 0 : 1} />
+          <Stars radius={200} depth={60} count={2500} factor={4} fade speed={reducedMotion ? 0 : 1} />
 
-          {/* The core: everything orbits the centre of the Hyperfocus Zone. */}
+          {/* The core: the centre of the Hyperfocus Zone, and the light source
+              every world is lit by. */}
           <mesh>
-            <sphereGeometry args={[1.6, 32, 32]} />
+            <sphereGeometry args={[2.4, 32, 32]} />
             <meshBasicMaterial color="#7dd3fc" />
           </mesh>
 
-          {worlds.map(({ planet, visual }) => (
+          {/* Faint guides for the three focus rings. Without them the shells are
+              just a scatter; with them you can SEE that NOW is the inner orbit. */}
+          {(
+            [
+              { r: 13, opacity: 0.3 },
+              { r: 26, opacity: 0.16 },
+              { r: 43, opacity: 0.08 },
+            ] as const
+          ).map(({ r, opacity }) => (
+            <mesh key={r} rotation={[Math.PI / 2, 0, 0]}>
+              <ringGeometry args={[r - 0.06, r + 0.06, 128]} />
+              <meshBasicMaterial color="#7dd3fc" transparent opacity={opacity} side={2} />
+            </mesh>
+          ))}
+
+          {worlds.map(({ planet, visual, position }) => (
             <PlanetMesh
               key={planet.repoId}
               planet={planet}
               visual={visual}
+              position={position}
               selected={focused === planet.repoId}
               still={reducedMotion}
               onSelect={(p) => onSelect(p, null)}
@@ -84,8 +123,8 @@ export function UniverseScene({ planets, onSelect }: Props) {
 
           <OrbitControls
             enablePan={false}
-            minDistance={8}
-            maxDistance={70}
+            minDistance={20}
+            maxDistance={160}
             // Auto-rotation is the first thing to go for a vestibular-sensitive
             // viewer. Never on when they've asked for stillness.
             autoRotate={!reducedMotion}

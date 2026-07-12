@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import type { Planet } from '@/types/planet';
-import { timeAgo } from '@/lib/mergeData';
+import { TimeAgo } from './TimeAgo';
 
 interface Props {
   planet: Planet;
@@ -114,7 +114,10 @@ export function PlanetSheet({ planet, onClose }: Props) {
         )}
 
         <dl className="mt-6 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-          <Fact label="Last push" value={timeAgo(planet.pushedAt)} />
+          <Fact
+            label="Last push"
+            value={<TimeAgo iso={planet.pushedAt} label={planet.pushedLabel} />}
+          />
           <Fact label="Language" value={planet.language ?? '—'} />
           <Fact label="Stars" value={String(planet.stars)} />
           <Fact label="Open issues" value={String(planet.openIssues)} />
@@ -170,7 +173,7 @@ export function PlanetSheet({ planet, onClose }: Props) {
   );
 }
 
-function Fact({ label, value }: { label: string; value: string }) {
+function Fact({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
       <dt className="text-xs uppercase tracking-wide text-inkDim">{label}</dt>

@@ -9,6 +9,8 @@ import type { PlanetVisual } from '@/types/planetVisual';
 interface Props {
   planet: Planet;
   visual: PlanetVisual;
+  /** Evenly distributed on the planet's focus shell. See computeOrbit(). */
+  position: [number, number, number];
   selected: boolean;
   /** True when the viewer asked their OS to reduce motion. Nothing moves. */
   still: boolean;
@@ -25,7 +27,7 @@ interface Props {
  * hidden from assistive tech and UniverseScene renders a real, focusable DOM
  * button for every planet alongside it. A screen-reader user never touches WebGL.
  */
-export function PlanetMesh({ planet, visual, selected, still, onSelect }: Props) {
+export function PlanetMesh({ planet, visual, position, selected, still, onSelect }: Props) {
   const orbitRef = useRef<Group>(null);
   const bodyRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState(false);
@@ -75,8 +77,10 @@ export function PlanetMesh({ planet, visual, selected, still, onSelect }: Props)
   const emissive = visual.glowIntensity + visual.lavaActivity * 0.6 + (active ? 0.5 : 0);
 
   return (
-    <group ref={orbitRef} rotation={[0, visual.orbitAngle, visual.orbitInclination]}>
-      <group position={[visual.orbitRadius, 0, 0]} rotation={[visual.axialTilt, 0, 0]}>
+    // Outer group spins about the universe centre (the orbit); inner group holds
+    // the world at its computed point on the shell.
+    <group ref={orbitRef}>
+      <group position={position} rotation={[visual.axialTilt, 0, 0]}>
         <mesh
           ref={bodyRef}
           onClick={(event) => {

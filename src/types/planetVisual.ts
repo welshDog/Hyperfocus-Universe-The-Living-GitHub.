@@ -20,10 +20,9 @@ export type PlanetVisual = {
    *  universe, so a star-driven radius would make all 84 worlds identical. */
   radius: number;
 
-  /** Concentric shells: NOW inner, NEXT middle, RESTING outer. */
-  orbitRadius: number;
-  orbitAngle: number;
-  orbitInclination: number;
+  /** Concentric shells: NOW inner, NEXT middle, RESTING outer.
+   *  Position comes from computeOrbit() — a Fibonacci sphere per shell, so
+   *  worlds are evenly spaced instead of clumping. */
   orbitSpeed: number;
   spinSpeed: number;
   axialTilt: number;

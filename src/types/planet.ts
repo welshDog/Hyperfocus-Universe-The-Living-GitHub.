@@ -76,5 +76,8 @@ export interface Planet extends RawPlanet {
   displayName: string;
   /** "neon-megacity" -> "Neon Megacity" */
   biomeLabel: string;
+  /** Relative time baked at BUILD. Never call timeAgo() during render — it uses
+   *  Date.now() and desynchronises server HTML from client hydration. */
+  pushedLabel: string;
   lore: Lore | null;
 }

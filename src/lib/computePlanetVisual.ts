@@ -29,11 +29,52 @@ function hashAngle(seed: string): number {
   return ((h >>> 0) % 3600) / 3600;
 }
 
-const SHELL: Record<Planet['focusState'], { radius: number; spread: number }> = {
-  NOW: { radius: 9, spread: 2.5 },
-  NEXT: { radius: 17, spread: 3 },
-  RESTING: { radius: 27, spread: 7 },
+const SHELL: Record<Planet['focusState'], { radius: number; jitter: number; thickness: number }> = {
+  NOW: { radius: 13, jitter: 2, thickness: 2.5 },
+  NEXT: { radius: 26, jitter: 2.5, thickness: 3.5 },
+  RESTING: { radius: 43, jitter: 4, thickness: 7 },
 };
+
+/**
+ * Where a world sits: an evenly-spaced point on its focus RING.
+ *
+ * Three iterations, each one found by looking at the render, not the numbers:
+ *
+ *  1. First pass derived orbitRadius AND orbitAngle from the same hash, so the
+ *     two were correlated and every planet landed on a SPIRAL. A smear.
+ *  2. Second pass used a Fibonacci SPHERE per shell. Even spacing, no overlap —
+ *     but a sphere projects to a filled disc, so 67 RESTING worlds scattered
+ *     straight through the middle and the shells were unreadable.
+ *  3. This pass: a flat RING per shell. NOW, NEXT and RESTING now render as
+ *     three concentric orbits, which is the entire point of the view — you must
+ *     be able to see what wants you today without reading a single word.
+ *
+ * Golden-angle stepping spaces the worlds evenly around each ring. Thickness and
+ * jitter come from their own hashes, so the ring reads organic rather than
+ * machined, and never re-correlates with the angle.
+ *
+ * Deterministic: same repos in, same universe out, every load.
+ */
+export function computeOrbit(
+  index: number,
+  total: number,
+  focusState: Planet['focusState'],
+  seed: string
+) {
+  const shell = SHELL[focusState];
+
+  // Spread the ring's members evenly around the full circle, whatever the count.
+  const theta = total > 0 ? (index / total) * Math.PI * 2 : 0;
+  const distance = shell.radius + (hashAngle(seed + '~r') - 0.5) * shell.jitter * 2;
+  const height = (hashAngle(seed + '~y') - 0.5) * shell.thickness;
+
+  return {
+    x: Math.cos(theta) * distance,
+    y: height,
+    z: Math.sin(theta) * distance,
+    distance,
+  };
+}
 
 export function computePlanetVisual(planet: Planet): PlanetVisual {
   const {
@@ -50,7 +91,6 @@ export function computePlanetVisual(planet: Planet): PlanetVisual {
   } = planet;
 
   const t = hashAngle(planet.repoId);
-  const shell = SHELL[focusState];
   const focusBoost = focusState === 'NOW' ? 1 : focusState === 'NEXT' ? 0.6 : 0.2;
 
   // 1 KB and 481,833 KB must both be legible on screen. Measured across the real
@@ -67,13 +107,11 @@ export function computePlanetVisual(planet: Planet): PlanetVisual {
     baseColor: color,
     accentColor: lore?.color ?? color,
 
-    radius: clamp(0.55 + mass * 0.35, 0.55, 2.6),
+    // RESTING worlds are held to two-thirds size. 67 of them at full scale
+    // swamped the 10 that actually matter — the focus hierarchy has to win over
+    // the size signal, or the view stops answering "what should I work on?".
+    radius: clamp(0.55 + mass * 0.35, 0.55, 2.6) * (focusState === 'RESTING' ? 0.65 : 1),
 
-    orbitRadius: shell.radius + t * shell.spread,
-    orbitAngle: t * Math.PI * 2,
-    // Tilt the outer shells so 67 RESTING worlds form a soft cloud rather than
-    // a flat disc you have to fly through to see anything.
-    orbitInclination: (hashAngle(planet.repoId + '~y') - 0.5) * (focusState === 'NOW' ? 0.3 : 0.9),
     orbitSpeed: archived ? 0 : focusState === 'NOW' ? 0.05 : focusState === 'NEXT' ? 0.03 : 0.012,
     spinSpeed: archived ? 0 : 0.05 + activityScore * 0.25,
     axialTilt: lore ? 0.45 : 0.18,

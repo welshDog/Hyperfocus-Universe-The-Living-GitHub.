@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 import type { Planet } from '@/types/planet';
-import { timeAgo } from '@/lib/mergeData';
+import { TimeAgo } from './TimeAgo';
 
 interface Props {
   planet: Planet;
@@ -62,7 +62,8 @@ export const PlanetCard = forwardRef<HTMLButtonElement, Props>(function PlanetCa
 
       <p className="mt-3 text-sm text-inkDim">
         {planet.biomeLabel}
-        {planet.language ? ` · ${planet.language}` : ''} · Updated {timeAgo(planet.pushedAt)}
+        {planet.language ? ` · ${planet.language}` : ''} · Updated{' '}
+        <TimeAgo iso={planet.pushedAt} label={planet.pushedLabel} />
       </p>
 
       {questCount > 0 ? (
