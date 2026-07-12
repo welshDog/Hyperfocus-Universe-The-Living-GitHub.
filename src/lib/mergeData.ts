@@ -25,6 +25,49 @@ function toBiomeLabel(biome: string): string {
     .join(' ');
 }
 
+/** Words that are genuinely acronyms and must stay shouting. ADHD earns its
+ *  place at the front — this is the one project that must never render it "Adhd". */
+const ACRONYMS = new Set([
+  'adhd', 'asd', 'nd', 'ai', 'agi', 'api', 'cli', 'ui', 'ux', '3d', '2d', 'id',
+  'os', 'pc', 'gpu', 'cpu', 'ram', 'npm', 'sdk', 'mcp', 'xp', 'db', 'ide', 'pi',
+  'vr', 'ar', 'nft', 'llm', 'ml', 'gpt', 'css', 'html', 'json', 'yaml', 'sql',
+  'aws', 'ci', 'cd', 'io', 'pdf', 'svg', 'mvp', 'tts', 'ocr',
+]);
+
+/**
+ * Make a repo slug readable WITHOUT inventing anything.
+ *
+ * 78 of 84 worlds have no hand-written lore, so they display their slug — and
+ * raw slugs are ugly: "-MIND-VAULT-ULTIMATE-GAME", "hyper-help-zone-".
+ *
+ * This is typography, not lore. It only strips separators and fixes SHOUTING.
+ * It does NOT correct spelling: "github-ai-mangaer-helper" stays "Mangaer",
+ * because the repo really is misspelled and the hub must not quietly lie about
+ * what it found. The true repoId is always rendered underneath.
+ *
+ * lore.planetName still wins over this, always.
+ */
+export function prettifySlug(slug: string): string {
+  return slug
+    .replace(/^[-_.]+|[-_.]+$/g, '') // leading/trailing junk: "-hyper-zone-"
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((word) => {
+      const lower = word.toLowerCase();
+      if (ACRONYMS.has(lower)) return lower.toUpperCase();
+      // SHOUTED words get calmed down; deliberate casing (HyperCode,
+      // HYPERFOCUSzone, dOoK) is left exactly as the author wrote it.
+      if (/^[A-Z0-9.]+$/.test(word) && word.length > 3) {
+        return word.charAt(0) + word.slice(1).toLowerCase();
+      }
+      if (/^[a-z0-9.]+$/.test(word)) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word;
+    })
+    .join(' ');
+}
+
 const merged: Planet[] = raw.map((planet) => {
   const l = loreByRepoId.get(planet.repoId) ?? null;
   // Lore overrides identity (biome/colour) but never live facts.
@@ -33,7 +76,9 @@ const merged: Planet[] = raw.map((planet) => {
     ...planet,
     biome,
     color: l?.color ?? planet.color,
-    displayName: l?.planetName ?? planet.repoId,
+    // Lore name wins; otherwise a readable slug. The raw repoId is still shown
+    // beneath it on the card, so nothing is hidden.
+    displayName: l?.planetName ?? prettifySlug(planet.repoId),
     biomeLabel: toBiomeLabel(biome),
     // Computed ONCE, at build, and shipped in the HTML. Calling timeAgo() during
     // render breaks hydration: the server renders "2 hours ago" at build time and

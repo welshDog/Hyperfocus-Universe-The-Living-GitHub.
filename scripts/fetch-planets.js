@@ -86,6 +86,16 @@ async function fetchRepos(user) {
   return all.filter((r) => !r.private);
 }
 
+const MAX_QUEST_CHARS = 120;
+
+/** A quest is a nudge, not an essay. Cut at a word boundary, never mid-word. */
+function clip(text) {
+  if (text.length <= MAX_QUEST_CHARS) return text;
+  const cut = text.slice(0, MAX_QUEST_CHARS);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 60 ? cut.slice(0, lastSpace) : cut).replace(/[,;:.\s]+$/, '') + '…';
+}
+
 /**
  * Pull WHATS-DONE.md and take the first N unchecked checkboxes.
  * Any failure (404, binary, malformed, network) yields [] — never throws.
@@ -98,17 +108,36 @@ async function fetchTrackerQuests(user, repo) {
     );
     if (!res.ok) return null;
     const md = await res.text();
+    const lines = md.split(/\r?\n/);
     const quests = [];
-    for (const line of md.split(/\r?\n/)) {
-      const m = /^\s*[-*]\s+\[ \]\s+(.+?)\s*$/.exec(line);
+
+    for (let i = 0; i < lines.length && quests.length < MAX_QUESTS; i++) {
+      const m = /^\s*[-*]\s+\[ \]\s+(.+?)\s*$/.exec(lines[i]);
       if (!m) continue;
-      const text = m[1]
+
+      // A markdown list item can wrap over several indented lines. Taking only
+      // the first one truncates the task mid-sentence ("...the focus trap is the
+      // risky"), which turns a real quest into gibberish. Absorb the wrapped
+      // continuation lines, and stop at a blank line or the next item.
+      let raw = m[1];
+      for (let j = i + 1; j < lines.length; j++) {
+        const next = lines[j];
+        if (!next.trim()) break;
+        if (/^\s*([-*]|\d+\.)\s/.test(next)) break; // next bullet
+        if (/^\s*#{1,6}\s/.test(next)) break; // next heading
+        if (!/^\s{2,}/.test(next)) break; // not an indented continuation
+        raw += ' ' + next.trim();
+        i = j;
+      }
+
+      const text = raw
         .replace(/\*\*(.+?)\*\*/g, '$1') // strip bold
         .replace(/`(.+?)`/g, '$1') // strip code ticks
         .replace(/\[(.+?)\]\(.+?\)/g, '$1') // link -> label
+        .replace(/\s+/g, ' ')
         .trim();
-      if (text) quests.push({ title: text, url: null });
-      if (quests.length >= MAX_QUESTS) break;
+
+      if (text) quests.push({ title: clip(text), url: null });
     }
     return quests.length ? quests : null;
   } catch {

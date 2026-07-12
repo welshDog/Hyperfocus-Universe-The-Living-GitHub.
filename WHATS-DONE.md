@@ -126,12 +126,16 @@ The old constellation *claimed* WCAG AA and shipped zero keyboard shortcuts and 
 - [x] Sheet has an accessible title (`aria-labelledby`) and a labelled Close button
 - [x] Filter state announced via `aria-live="polite"` ("Showing 17 worlds · 13 quests")
 - [x] `prefers-reduced-motion: reduce` kills all transitions and the starfield
-- [x] **axe-core 4.12.1 (headless Chrome) against the live URL: 0 violations.**
-      Caveat, stated honestly: axe detects only 20–50% of accessibility issues, and
-      this scan covered the **default state only** — sheet closed, RESTING collapsed.
-- [ ] **Still not done:** axe with the planet sheet OPEN (the focus trap is the risky
-      part), and a real screen-reader pass (NVDA/VoiceOver). Nobody has *driven* this
-      with assistive tech. Until they have, we claim no WCAG conformance.
+- [x] **axe-core, WCAG 2.0/2.1 A + AA rules, across all three states: 0 violations.**
+      Not just the default view this time — List, **Universe 3D**, and the **planet
+      sheet OPEN** (the dialog + focus trap, the riskiest part, previously unscanned).
+- [x] **Keyboard proven, not asserted:** driven in a real browser — Escape closed the
+      dialog and focus returned to *the exact button that opened it*
+      (`Open planet Mind Vault Ultimate Game`).
+- [ ] **Still not done: a real screen-reader pass** (NVDA/Narrator/VoiceOver). axe
+      catches only 20–50% of issues and cannot tell you whether the thing is
+      *comprehensible*. Until a human drives it with assistive tech, we claim **no
+      WCAG conformance**.
 
 ### 🌌 Hyper 3D — Universe View (built 2026-07-12)
 
@@ -193,7 +197,16 @@ Verified in-browser: reduced-motion frames are **byte-identical 3 seconds apart*
 frozen, not merely slowed), the scene is complete and calm rather than broken, Tab reaches
 the planet buttons, no console errors, no horizontal overflow at 390px.
 
-- [ ] Not yet done: axe/screen-reader pass **on the Universe view** specifically
+- [x] axe pass **on the Universe view** and on the open planet sheet: **0 violations**
+- [x] **Readable world names.** 78 of 84 worlds had no lore and showed a raw slug
+      (`-MIND-VAULT-ULTIMATE-GAME`, `hyper-help-zone-`). `prettifySlug()` is *typography,
+      not lore*: it strips separators and calms SHOUTING, but never corrects spelling —
+      `github-ai-mangaer-helper` still renders "Mangaer", because the hub must not
+      quietly lie about what it found. The true `repoId` is always shown beneath.
+      `ADHD` is protected from being rendered "Adhd".
+- [x] **Multi-line quest parsing.** The parser took only a bullet's first physical line,
+      so any wrapped task was truncated mid-sentence into gibberish. It now absorbs
+      continuation lines and clips at a word boundary.
 
 ---
 
