@@ -1,0 +1,12 @@
+# HyperFocus Z0ne repo manifest - read by scripts/gen_repo_map.py
+# Edit this file, then re-run the generator. Never hand-edit the map.
+
+name: "Hyperfocus-Universe-The-Living-Hub"
+emoji: "🌌"
+tagline: "Your GitHub as a living 3D solar system — repos are planets, commits build worlds"
+category: "games"
+stack: "Next.js + React Three Fiber"
+first_doc: "README.md"
+tier: "BUILDING"
+url: ""
+notes: "candidate consumer of ecosystem-map.json"
