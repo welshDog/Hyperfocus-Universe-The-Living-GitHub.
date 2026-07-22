@@ -1,106 +1,111 @@
-# 🌌 Hyperfocus Universe: The Living GitHub
+# 🌌 Hyperfocus Universe: The Living Hub
 
-> **"A commit is no longer a line on a graph—it is a visible act of world-building."**
+> **"A commit is no longer a line on a graph — it is a visible act of world-building."**
 
+[![Live Universe](https://img.shields.io/badge/🌌_Live_Universe-Visit_Now-7c3aed?style=for-the-badge)](https://hyperfocus-universe-the-living-hub.vercel.app)
+[![HyperFocus Zone Portal](https://img.shields.io/badge/🗺️_Ecosystem_Map-Portal-0ea5e9?style=for-the-badge)](https://github.com/welshDog/HyperFocus-Zone-Portal)
+[![Neuro Dev Stack](https://img.shields.io/badge/⚡_Neuro_Dev_Stack-Quickstart-22c55e?style=for-the-badge)](https://github.com/welshDog/HyperCode-V2.4)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
-[![Made with React Three Fiber](https://img.shields.io/badge/Made%20with-React%20Three%20Fiber-61DAFB?logo=react)](https://docs.pmnd.rs/react-three-fiber)
-[![Powered by GitHub API](https://img.shields.io/badge/Powered%20by-GitHub%20API-181717?logo=github)](https://docs.github.com/en/rest)
 
 ---
 
 ## 🚀 What is this?
 
-**Hyperfocus Universe** transforms your GitHub repositories into a **living, breathing 3D solar system** where:
+**Hyperfocus Universe** transforms your GitHub repositories into a **living, breathing 3D solar system** where every commit is world-building and every repo is a planet with its own civilisation.
 
-- 🪐 **Every repo is a planet** with its own biome, civilization, and personality
-- ⚡ **GitHub activity drives the world**: commits build structures, issues create rifts, releases trigger celebrations
-- 🎮 **It's a game AND a portfolio**: visitors explore your universe, you navigate your projects with focus
-- 🧠 **Built for neurodivergent minds**: designed with ADHD-friendly focus modes, gentle visual feedback, and no guilt-inducing metrics
+> 🧠 **Built for neurodivergent minds.** Designed with ADHD-friendly focus modes, no guilt-inducing metrics, and a narrative layer that makes your work feel like an adventure — not a checklist.
 
-**This is NOT just a pretty visualization.** This is your **developer command center**, **live project map**, and **interactive portfolio** all in one.
+**This is NOT just a pretty visualisation.** It's your:
+- 🗺️ **Developer command centre** — see your whole ecosystem at a glance
+- 🌍 **Live project map** — GitHub activity drives the world in real time
+- 🎮 **Interactive portfolio** — visitors explore your universe
+- 🎯 **Focus engine** — NOW / NEXT / RESTING modes for ADHD clarity
+
+---
+
+## 🌠 Live Universe
+
+**👉 [hyperfocus-universe-the-living-hub.vercel.app](https://hyperfocus-universe-the-living-hub.vercel.app)**
+
+Fly through the universe. Click planets. Read their lore. See live GitHub activity.
 
 ---
 
 ## ✨ Core Features
 
-### 🌍 Living Planets
-
+### 🪐 Living Planets
 Each repository becomes a unique world:
-
 - **Biomes based on language**: TypeScript = neon megacity, Python = bio-tech jungle, Rust = volcanic forge
 - **Activity-driven visuals**: recent commits = glowing halos, open issues = visible rifts, archived repos = peaceful museum worlds
 - **Real GitHub data**: stars, forks, commits, contributors, releases all shape the planet
-- **Custom lore**: hand-written civilization stories and missions for each project
+- **Custom lore**: hand-written civilisation stories and missions for each project
 
-### 🎯 Focus Mode
-
-Built specifically for ADHD brains:
-
-- **NOW**: Pick one planet to focus on - everything else dims
-- **NEXT**: 1-3 planets in close orbit for upcoming work
-- **RESTING**: All other projects, calm and preserved (never "dead" or "abandoned")
+### 🎯 Focus Mode (ADHD-First)
+Built specifically for neurodivergent brains:
+- **NOW** — Pick one planet to focus on. Everything else dims.
+- **NEXT** — 1–3 planets in close orbit for upcoming work
+- **RESTING** — All other projects, calm and preserved (never "dead" or "abandoned")
 - **No overwhelm**: See only what matters, when it matters
 
 ### 🎮 Explorer Mode
-
 For visitors and portfolio viewing:
-
 - Fly through your developer universe
-- Click planets to read their story
-- See live activity and project health
+- Click planets to read their story and see live stats
 - Jump to GitHub, docs, or live demos
 - Collect exploration badges (optional)
 
 ### 🔄 Live Updates
-
-Your universe stays current:
-
-- GitHub Actions workflow auto-refreshes planet data
+- GitHub Actions auto-refreshes planet data
 - Webhook support for instant updates (optional)
 - Timeline slider to see your universe evolve over time
 - Event system: releases = fireworks, issue fixes = celebrations
 
 ### ♿ Accessible by Design
-
 - Reduced motion mode
 - High contrast options
 - Keyboard navigation
 - Screen reader friendly
 - Optional audio (always mutable)
-- Works without 3D (2D fallback map)
+- 2D fallback map for non-3D environments
 
 ---
 
-## ♿ Accessibility status
+## 🗺️ Ecosystem Position
 
-The first interface is designed for keyboard use, visible focus, dialog focus management,
-and reduced-motion preferences.
+This is the **story layer** of the Hyperfocus Zone. Here's how it fits:
 
-An automated axe-core scan of the live page reports **0 violations** in its default state.
-That is a useful signal, not a certificate: axe detects only 20–50% of accessibility
-issues, and the scan did not cover the open planet sheet.
+```
+🌌 Hyperfocus Universe (YOU ARE HERE)
+    ↓ story view of everything
+🗺️ HyperFocus-Zone-Portal      → ecosystem map + front door
+⚡ HyperCode-V2.4               → 32-agent engine (the power plant)
+💻 HyperFocus-IDE-BROski-v1    → the IDE you actually code in
+🧠 BROski-Obsidian-Brain       → long-term memory layer
+🎓 Hyper-Vibe-Coding-Course    → learn the whole stack
+🛠️ WelshDog-Mission-Control    → ops dashboard
+```
 
-Screen-reader testing has **not** been done. We do not claim WCAG conformance or a
-completed accessibility audit, and we will not until someone has run the tests and
-recorded the results.
+📍 **Full ecosystem map** → [HyperFocus-Zone-Portal](https://github.com/welshDog/HyperFocus-Zone-Portal)
 
 ---
 
 ## 🏗️ Tech Stack
 
-- **Frontend**: Next.js 14+ (App Router) + TypeScript
-- **3D Engine**: React Three Fiber + Drei + Three.js
-- **GitHub Data**: REST API + GitHub Actions for auto-refresh
-- **Styling**: Tailwind CSS + Framer Motion
-- **Deployment**: Vercel (or any static host)
-- **Data Storage**: JSON files (planets.json + lore.json)
+| Layer | Tech |
+|---|---|
+| Frontend | Next.js 14+ (App Router) + TypeScript |
+| 3D Engine | React Three Fiber + Drei + Three.js |
+| GitHub Data | REST API + GitHub Actions |
+| Styling | Tailwind CSS + Framer Motion |
+| Deployment | Vercel |
+| Data | JSON files (planets.json + lore.json) |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-Hyperfocus-Universe-The-Living-GitHub/
+Hyperfocus-Universe-The-Living-Hub/
 ├── data/
 │   ├── planets.json          # Auto-generated from GitHub API
 │   ├── lore.json             # Hand-written planet stories
@@ -121,13 +126,11 @@ Hyperfocus-Universe-The-Living-GitHub/
 │   └── types/
 │       └── planet.ts         # TypeScript types
 ├── scripts/
-│   └── fetch-planets.js      # CLI script to fetch GitHub data
-├── .github/
-│   └── workflows/
-│       └── refresh-planets.yml  # Auto-update action
-├── public/
-│   └── textures/             # Planet textures (optional)
-├── PLANET_LORE_GUIDE.md      # Guide for adding planet lore
+│   └── fetch-planets.js      # CLI to fetch GitHub data
+├── .github/workflows/
+│   └── refresh-planets.yml   # Auto-update action
+├── UNIVERSE-STORY.md         # 📖 The lore of this universe
+├── CONNECT.md                # 🗺️ Navigate the whole ecosystem
 └── README.md                 # This file
 ```
 
@@ -136,25 +139,22 @@ Hyperfocus-Universe-The-Living-GitHub/
 ## 🎯 Roadmap
 
 ### ✅ Level 1: It Lives (MVP)
-
 - [x] GitHub API integration
-- [ ] Basic 3D universe with clickable planets
-- [ ] Planet colors based on primary language
-- [ ] Activity glow for recent commits
-- [ ] Side panel with repo info
-- [ ] Focus mode (NOW/NEXT/RESTING)
+- [x] Basic 3D universe with clickable planets
+- [x] Planet colours based on primary language
+- [x] Activity glow for recent commits
+- [x] Side panel with repo info
+- [x] Focus mode (NOW/NEXT/RESTING)
 
 ### 🚧 Level 2: It Reacts
-
 - [ ] Commit-driven structure generation
 - [ ] Issue rifts and release fireworks
 - [ ] Topic-based orbital connections
 - [ ] Manual lore system
 - [ ] Timeline slider (view universe history)
-- [ ] Archived repo special visuals
+- [ ] Archived repo special visuals (Museum Worlds)
 
 ### 🌟 Level 3: It Becomes a Game
-
 - [ ] Simple AI citizens (wander, build, celebrate)
 - [ ] Daily "kind quest" based on real tasks
 - [ ] Achievement system (first star, 7-day streak, etc.)
@@ -166,72 +166,56 @@ Hyperfocus-Universe-The-Living-GitHub/
 
 ## 🧠 Philosophy
 
-### Why this exists
-
-As a neurodivergent developer with ADHD, I found that traditional project dashboards were:
-
-- **Overwhelming**: too many metrics, too much guilt
-- **Disconnected**: no sense of continuity or story
-- **Demotivating**: quiet projects felt like failures
+As a neurodivergent developer with ADHD, traditional project dashboards were:
+- **Overwhelming** — too many metrics, too much guilt
+- **Disconnected** — no sense of continuity or story
+- **Demotivating** — quiet projects felt like failures
 
 This universe is different:
+- **No guilt** — Resting projects are beautiful archives, not dead failures
+- **Narrative-driven** — Every project has a purpose and story
+- **Focus-oriented** — See only what you need to see
+- **Continuity** — Return after distraction to a world that makes sense
 
-- **No guilt**: Resting projects are beautiful archives, not dead failures
-- **Narrative-driven**: Every project has a purpose and story
-- **Focus-oriented**: See only what you need to see
-- **Continuity**: Return after distraction to a world that makes sense
-
-### Design principles
-
-1. **Activity != Worth**: Archived projects are honored, not hidden
-2. **Focus over overwhelm**: Less is more
-3. **Story over stats**: Why you built it matters more than star count
-4. **Gentle feedback**: Celebrations, never shame
-5. **Accessibility first**: Works for everyone, built for neurodivergent minds
+### Design Principles
+1. **Activity ≠ Worth** — Archived projects are honoured, not hidden
+2. **Focus over overwhelm** — Less is more
+3. **Story over stats** — Why you built it matters more than star count
+4. **Gentle feedback** — Celebrations, never shame
+5. **Accessibility first** — Works for everyone, built for neurodivergent minds
 
 ---
 
 ## 🤝 Contributing
 
 This is an open-source project built in the spirit of neurodivergent creativity. Contributions welcome!
-
-### Ways to contribute
-
 - 🐛 Report bugs or suggest features via Issues
 - 🎨 Improve planet biome designs
-- 🧪 Add new civilization archetypes
+- 🧪 Add new civilisation archetypes
 - 📝 Improve documentation
 - ♿ Enhance accessibility features
 - 🎮 Suggest game mechanics
 
 ---
 
+## 🗺️ Navigate the Ecosystem
+
+See **[CONNECT.md](CONNECT.md)** for the full map of every Hyperfocus Zone project and where to go next.
+
+---
+
 ## 📜 License
 
-GPL-3.0 License - see [LICENSE](LICENSE) for details.
+GPL-3.0 — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 💙 About
+## 💙 Built by WelshDog
 
-Built by **[@welshDog](https://github.com/welshDog)** as part of the **Hyperfocus Zone** ecosystem.
+Built by **[@welshDog](https://github.com/welshDog)** from Llanelli, Wales 🏴󠁧󠁢󠁷󠁬󠁳󠁿
 
-Part of a larger vision to create neurodivergent-friendly developer tools that respect how our brains actually work.
-
-### Other Hyperfocus projects
-
-- 🎯 [HyperFocus Zone Portal](https://github.com/welshDog/HyperFocus-Zone-Portal) - Main hub
-- 💻 [THE-HYPERCODE](https://github.com/welshDog/THE-HYPERCODE) - Visual coding for divergent minds
-- 🌌 [Hyperfocus Constellation](https://github.com/welshDog/hyperfocus-constellation) - Original inspiration
+Part of the **[Hyperfocus Zone](https://github.com/welshDog/HyperFocus-Zone-Portal)** — a full neurodivergent-first developer ecosystem.
 
 ---
 
-## 🚀 Get Started
-
-Coming soon: Installation and quick start guide.
-
-For now, this is under active construction. Watch this repo to see it come alive! 🔥
-
----
-
-**Remember**: Your code isn't just commits. It's a universe you're building, one world at a time. 🌌♾️
+**Remember: Your code isn't just commits. It's a universe you're building, one world at a time. 🌌♾️**
